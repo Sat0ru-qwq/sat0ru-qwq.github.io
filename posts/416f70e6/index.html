@@ -1,0 +1,1022 @@
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>域基础漏洞 - Satoru's Blog</title>
+
+  
+    <meta name="description" content="简单介绍了微软实现第三方协议下产生的域安全漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域基础漏洞">
+<meta property="og:url" content="https://blog.sudo.online/posts/416f70e6/">
+<meta property="og:site_name" content="Satoru&#39;s Blog">
+<meta property="og:description" content="简单介绍了微软实现第三方协议下产生的域安全漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.sudo.online/img/avatar.jpg">
+<meta property="article:published_time" content="2025-07-27T12:37:43.000Z">
+<meta property="article:modified_time" content="2025-09-05T16:03:13.713Z">
+<meta property="article:author" content="Satoru">
+<meta property="article:tag" content="域">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sudo.online/img/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="域">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Satoru's Blog" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/img/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg"},"dateCreated":"2025-07-27T20:37:43+08:00","dateModified":"2025-09-06T00:03:13+08:00","datePublished":"2025-07-27T20:37:43+08:00","description":"","headline":"域基础漏洞","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.sudo.online/posts/416f70e6/"},"publisher":{"@type":"Organization","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg","logo":{"@type":"ImageObject","url":"/img/avatar.jpg"}},"url":"https://blog.sudo.online/posts/416f70e6/","keywords":"域","image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/img/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Satoru's Blog</div><div class="sub cap">Learning Cyber Security...</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M3.464 20.536C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535" opacity="0.5"/><path fill="currentColor" d="M9.5 8.75A3.25 3.25 0 1 0 12.75 12a.75.75 0 0 1 1.5 0A4.75 4.75 0 1 1 9.5 7.25a.75.75 0 0 1 0 1.5"/><path fill="currentColor" d="M17.75 12a3.25 3.25 0 0 1-3.25 3.25a.75.75 0 0 0 0 1.5A4.75 4.75 0 1 0 9.75 12a.75.75 0 0 0 1.5 0a3.25 3.25 0 0 1 6.5 0"/></svg></a><a class="nav-item" title="关于" href="/about/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">无限进步<<<</span></div><div class="widget-body fs14"><p>银鞍照白马，飒沓如流星</p>
+</div></widget>
+
+<widget class="widget-wrapper linklist"><div class="widget-body fs14">
+<div class="linklist left" style="grid-template-columns:repeat(1,1fr);">
+<a class="link" title="渗透测试" href="/categories/penetration"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M14 21.71A7 7 0 0 1 5 15v-3.062A3.94 3.94 0 0 1 8.938 8h6.124A3.94 3.94 0 0 1 19 11.938V15a6.98 6.98 0 0 1-2 4.899"/><path fill="currentColor" d="M8.25 7.5a.75.75 0 0 0-1.5 0zm-.615-2.917a.75.75 0 1 0 1.246.834zM17.25 8.5v-1h-1.5v1zm-10.5-1v1h1.5v-1zm10.5 0c0-2.9-2.35-5.25-5.25-5.25v1.5a3.75 3.75 0 0 1 3.75 3.75zM12 2.25a5.25 5.25 0 0 0-4.365 2.333l1.246.834A3.75 3.75 0 0 1 12 3.75z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15"/></g></svg><span>渗透测试</span></div></a>
+<a class="link" title="代码审计" href="/categories/code-audit"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="m17 7.83l1.697 1.526c1.542 1.389 2.313 2.083 2.313 2.974c0 .89-.771 1.585-2.314 2.973L17 16.83"/><path d="m13.987 5l-3.974 14.83" opacity="0.5"/><path d="M7 7.83L5.304 9.356C3.76 10.745 2.99 11.44 2.99 12.33s.771 1.585 2.314 2.973L7 16.83"/></g></svg><span>代码审计</span></div></a>
+<a class="link" title="安全研究" href="/categories/research"><div class="flex"><?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 16C44 22.6274 38.6274 28 32 28C29.9733 28 28.0639 27.4975 26.3896 26.6104L9 44L4 39L21.3896 21.6104C20.5025 19.9361 20 18.0267 20 16C20 9.37258 25.3726 4 32 4C34.0267 4 35.9361 4.50245 37.6104 5.38959L30 13L35 18L42.6104 10.3896C43.4975 12.0639 44 13.9733 44 16Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>安全研究</span></div></a></div></div></widget>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/a27ef720/"><span class="title">身份隐藏_无痕系列(2)</span></a><a class="item title" href="/posts/bb65c661/"><span class="title">身份隐藏_无痕系列(3)</span></a><a class="item title" href="/posts/877fc705/"><span class="title">身份隐藏_无痕系列(1)</span></a><a class="item title" href="/posts/afb5c91c/"><span class="title">一些时报</span></a><a class="item title" href="/posts/416f70e6/"><span class="title">域基础漏洞</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/sat0ru-qwq" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="mailto:s4t0ru@qq.com" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/penetration/">penetration</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-07-27T12:37:43.000Z">2025-07-27</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-05T16:03:13.713Z">2025-09-06</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>域基础漏洞</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="Windows域环境攻击技术详解"><a href="#Windows域环境攻击技术详解" class="headerlink" title="Windows域环境攻击技术详解"></a>Windows域环境攻击技术详解</h1><h2 id="GPP-MS14-025"><a href="#GPP-MS14-025" class="headerlink" title="GPP (MS14-025)"></a>GPP (MS14-025)</h2><p>管理员为了统一管理计算机本地管理员的密码，有时会通过组策略(Group Policy Preferences)来统一设置，该方法会将配置信息写入 <code>\\&lt;DC&gt;\SYSVOL\&lt;Domain FQDN&gt;\Policies\</code> 域控共享目录的XML文件中，类似的文件有drives.xml, groups.xml, printers.xml等。</p>
+<p>SYSVOL共享目录保存了登录脚本、组策略数据等其它域内共享数据，所以<strong>域内任意用户均对该目录具有读权限</strong>，并且这些数据在所有域控服务器之间自动同步。</p>
+<p>XML文件中的密码字段(cpassword)采用AES256加密存储，但是微软在2012年公开了加密密钥，导致密文可轻易还原。MS14-025补丁禁用了组策略保存密码的功能，但即使打了该补丁，之前保存的配置文件依然存在，需要手动删除相应xml文件。</p>
+<blockquote>
+<p><strong>本质</strong>：域控通过组策略保存密码时，由于都是保存在域控共享目录的XML文件中，域内任意用户均对该目录具有读权限，而且这些数据在所有域控服务器之间都是自动同步的。</p>
+<p><strong>漏洞关键</strong>：XML中的密码字段采用AES，但由于密钥公开，导致密文可以轻易还原。</p>
+</blockquote>
+<h2 id="GoldenPAC-MS14-068"><a href="#GoldenPAC-MS14-068" class="headerlink" title="GoldenPAC (MS14-068)"></a>GoldenPAC (MS14-068)</h2><p>前面提到过，PAC是微软对Kerberos协议做的扩展，其中包含了用户名、ID、所属组等信息，并且用krbtgt及目标服务的帐户密码(long-term secret key)进行签名确保其完整性，以防止用户伪造身份信息。</p>
+<p>但是微软在实现的过程中，除了支持默认的HMAC-MD5、HMAC-SHA1等需要密钥(keyed)的加密算法外，还支持弱加密算法，比如MD4、MD5、CRC32等，这类算法不需要密钥(unkeyed)，所以攻击者可以任意伪造PAC中的信息(比如该用户所属组)，只需要用MD5算法对伪造的PAC数据进行签名，域控TGS服务即认为该PAC数据是有效可信的。</p>
+<p>虽然PAC是可以伪造的，但是PAC包含在票据的加密部分内，以TGT为例，PAC所在的部分外层被krbtgt帐户密码加密，客户端无法解密，也就无法替换其中的PAC数据。</p>
+<p>上文提到过，用户在预认证阶段(AS-REQ)如果指定PA-PAC-REQUEST为False，域控AS服务会为其生成一个不包含PAC数据的TGT票据，同样以krbtgt帐户密码加密且有效。</p>
+<p>客户端伪造高权限(比如”Domain Admins”管理员组)的PAC并采用不需要密钥的弱加密算法进行签名，附加到上一步域控返回的不包含PAC的TGT中，向域控TGS服务发起TGS-REQ发起请求，申请krbtgt服务的服务票据，也就是TGT。存在该漏洞的域控TGS服务验证用户提交的TGT及PAC都是有效的，所以生成有效的TGT票据(管理员组权限)返回给客户端。</p>
+<p>客户端可以用域管理员权限的TGT(身份证)继续向域控的TGS服务申请域内任意服务的ST，比如域控服务器的CIFS服务，从而获取域控服务器权限。</p>
+<h3 id="攻击步骤"><a href="#攻击步骤" class="headerlink" title="攻击步骤"></a>攻击步骤</h3><ol>
+<li><strong>伪造PAC</strong>：攻击者可以修改PAC中的信息，比如把用户的权限提升为管理员，然后使用不需要密钥的MD5算法来签名这个伪造的PAC。</li>
+<li><strong>获取不带PAC的TGT</strong>：在请求TGT（票据）时，攻击者可以告诉域控不需要PAC数据，域控就会生成一个没有PAC的TGT，虽然没有PAC，但仍然被加密，且在一定情况下是有效的。</li>
+<li><strong>伪造PAC并插入TGT</strong>：攻击者将伪造的PAC插入到不带PAC的TGT中，然后用这个修改过的TGT向域控TGS（服务票据发放服务）请求一个服务票据（比如CIFS服务票据）。</li>
+<li><strong>获取管理员权限</strong>：TGS验证这个伪造的TGT时，并没有检查PAC的完整性，所以认为它是有效的，最终返回给攻击者一个带有管理员权限的服务票据。攻击者可以使用这个票据进一步攻击域控服务器，获取更高权限。</li>
+</ol>
+<h2 id="PrivExchange-SSRF-NTLM-Relay"><a href="#PrivExchange-SSRF-NTLM-Relay" class="headerlink" title="PrivExchange (SSRF &amp; NTLM Relay)"></a>PrivExchange (SSRF &amp; NTLM Relay)</h2><h3 id="Exchange-SSRF"><a href="#Exchange-SSRF" class="headerlink" title="Exchange SSRF"></a>Exchange SSRF</h3><p>Exchange Web Services (EWS) API中的 PushSubscriptionRequest 函数存在SSRF(Server Side Request Forgery)漏洞，任意拥有邮箱的域用户可以利用该功能诱使Exchange服务向其指定的URL发起HTTP请求(定时推送订阅通知)。如果攻击者伪造HTTP服务，要求Exchange服务进行NTLM认证(基于HTTP)，则可将认证请求转发至域内其它服务(比如域控的LDAP服务)进行认证，从而获取运行Exchange服务的计算机帐户的权限。</p>
+<h3 id="Exchange权限过高-too-high-privileges-by-default"><a href="#Exchange权限过高-too-high-privileges-by-default" class="headerlink" title="Exchange权限过高 (too high privileges by default)"></a>Exchange权限过高 (too high privileges by default)</h3><p>当服务在域成员计算机上的LocalSystem帐户下运行时，该服务具有授予该计算机帐户的任何网络访问权限。运行Exchange服务的计算机帐户在AD内具有较高的权限，其属于”Exchange Trusted Subsystem”组，而该组又属于”Exchange Windows Permissions”组。</p>
+<p><strong>“Exchange Windows Permissions”组对域对象具有WriteDacl权限</strong></p>
+<blockquote>
+<p><strong>WriteDacl权限</strong>：让持有者能够修改对象的访问控制规则，从而影响其他用户对该对象的访问权限。这是一个非常强大的权限，通常只会授予给系统管理员或者需要修改资源访问控制的用户。</p>
+</blockquote>
+<p>也就是说Exchange服务可以对域内任意对象新增或删除ACE(Access Control Entries)，比如为某个用户增加DCSync权限(相当于拥有域管理员权限)，DCSync实际上需要以下三个权限：</p>
+<ul>
+<li>Replicating Directory Changes</li>
+<li>Replicating Directory Changes All</li>
+<li>Replicating Directory Changes In Filtered Set</li>
+</ul>
+<blockquote>
+<p><strong>DCSync权限 &#x3D;&#x3D; 域控权限</strong></p>
+</blockquote>
+<h2 id="NTLM-Relay"><a href="#NTLM-Relay" class="headerlink" title="NTLM Relay"></a>NTLM Relay</h2><h3 id="NTLM-Relay-101"><a href="#NTLM-Relay-101" class="headerlink" title="NTLM Relay 101"></a>NTLM Relay 101</h3><p>NTLM实际上也叫NTHash，其加密算法为MD4(UTF-16-LE(password))，NTLMv1&#x2F;v2(也叫Net-NTLMv1&#x2F;v2)是由NTHash衍生而来(引入随机数进行加密)，做网络认证用。</p>
+<p>NTHash存储在系统SAM(Security Account Manager)及域控的NTDS.dit数据库中，可以用来执行Pass-The-Hash攻击，而Net-NTLMv1&#x2F;v2不能用来执行Pass-The-Hash，仅能用来转发(relay)。</p>
+<p>NTLM是基于挑战-应答机制的认证协议，使用共享密钥(即用户的密码)来对客户端进行认证：</p>
+<ol>
+<li><strong>第一步</strong>：客户端向服务端发起认证请求，协商使用的协议版本(Net-NTLMv1&#x2F;v2)、是否启用签名等信息。</li>
+<li><strong>第二步</strong>：服务端选择一个版本并返回一段随机字符作为challenge(也叫nonce)。</li>
+<li><strong>第三步</strong>：客户端使用NTHash对challenge加密并发送给服务端(response)，如果加密结果与服务端计算的结果匹配，则客户端认证成功。</li>
+</ol>
+<p>NTLM认证协议天然存在转发攻击的风险，攻击者诱使客户端向其自身发起NTLM认证，并将其转发至目标服务器，通过中间人攻击实现在不需要用户密码的情况下，以客户端身份向服务器发起认证。SMB签名可以阻止此类转发攻击，但是默认情况下，只有域控的SMB服务默认强制启用签名校验。</p>
+<h3 id="Reflective-NTLM-Relay-is-Dead"><a href="#Reflective-NTLM-Relay-is-Dead" class="headerlink" title="Reflective NTLM Relay is Dead?"></a>Reflective NTLM Relay is Dead?</h3><p>在MS08-068补丁之前，基于SMB的NTLM认证可以转发至客户端自身的SMB服务，所以也叫反射型转发，这个补丁之后，客户端发起的基于HTTP的NTLM认证依然可以转发至自身的SMB服务，该漏洞通常用来实现本地提权，MS16-075修复了这种跨协议(Cross-protocol)的反射型转发。</p>
+<h3 id="Cross-protocol-relaying"><a href="#Cross-protocol-relaying" class="headerlink" title="Cross protocol relaying"></a>Cross protocol relaying</h3><p>NTLM认证通常封装在其它协议内部，比如SMB、HTTP(s)、LDAP、IMAP、SMTP、POP3、MSSQL，其内部的NTLM认证部分是一样的，所以可以将一种协议内部的NTLM认证转发至其它协议。比如基于HTTP的NTLM认证通过HTTP Header中的”Authorization”发送，攻击者可以将其抽离出来发送至SMB服务进行认证。</p>
+<h3 id="Relay-NTLM（in-HTTP）to-LDAP"><a href="#Relay-NTLM（in-HTTP）to-LDAP" class="headerlink" title="Relay NTLM（in HTTP）to LDAP"></a>Relay NTLM（in HTTP）to LDAP</h3><p>综合以上介绍的Exchange SSRF漏洞、Exchange默认权限过高、NTLM转发攻击，攻击者可以诱使Exchange服务向其自身发起HTTP NTLM认证，并将其转发至域控的LDAP服务，以Exchange服务的身份认证成功后，利用其修改任意域对象DACL的权限，赋予攻击者控制的域帐户DCSync权限，从而dump出域内任意帐户的NTHash，获取域管理员的权限。</p>
+<h2 id="NTLM-Tampering-Drop-The-MIC-RBCD"><a href="#NTLM-Tampering-Drop-The-MIC-RBCD" class="headerlink" title="NTLM Tampering (Drop The MIC) &amp; RBCD"></a>NTLM Tampering (Drop The MIC) &amp; RBCD</h2><p>上一个漏洞中介绍了利用Exchange服务发起基于HTTP的NTLM认证并转发至域控LDAP服务认证，进而修改域ACL权限(Exchange服务帐户具有WriteDacl权限)，提升任意用户为域管理员权限。</p>
+<p>而这个漏洞则可以实现将辅助域控服务器的基于SMB的NTLM认证转发至主域控的LDAPS服务，利用基于资源的约束委派特性(RBCD:Resource-Based Constrained Delegation)，以任意用户身份(域管理员)生成辅助域控服务器CIFS服务的ST(Service Ticket)，从而获取辅助域控服务器权限。</p>
+<p>该攻击过程首先利用打印机服务(SpoolService)MS-RPRN(Print System Remote Protocol)RPC接口的一个BUG，利用该BUG可诱使目标服务器向任意主机发起SMB认证。</p>
+<p>研究人员发现，在基于SMB的NTLM认证过程中，即使客户端在第一步协商(NTLM_NEGOTIATE)请求中指定需要对NTLM认证进行签名(SMB Signing)，只要服务端未强制要求签名(域控LDAP(s)服务默认不强制要求签名)，攻击者即可以通过中间人攻击，在转发基于SMB的NTLM认证的过程中，将NTLM安全级别降低为未签名的状态，从而实现将基于SMB的NTLM转发至域控的LDAPS服务进行认证。</p>
+<p>域成员计算机运行的服务通常与其计算机帐户对应，而任意域用户都具有创建计算机帐户的权限(默认可创建10个，详情可参考：MachineAccountQuota)，创建计算机帐户的同时为其注册SPN，使其成为一个合法的服务帐户(ServiceA)。</p>
+<p>以辅助域控服务器的计算机帐户向主域控LDAPS服务认证成功后，由于域内任意计算机对象都具有基于资源的约束委派权限(Since Windows Server 2012)，其可以自行决定允许另外一个服务(ServiceA)”假冒”任意用户访问其自身的CIFS服务(ServiceB，这里为辅助域控的文件共享服务)，CIFS服务实际上是SMB协议的一种实现。</p>
+<p>新创建的计算机帐户(for ServiceA)被辅助域控服务器(ServiceB)授予基于资源的约束委派权限后(AllowedToActOnBehalfOfOtherIdentity&#x3D;ServiceA)，其可以通过S4U协议(S4U2Self+S4U2Proxy)以域管理员身份登录辅助域控服务器的CIFS服务，从而获取域控服务器权限。</p>
+<h3 id="攻击流程简化"><a href="#攻击流程简化" class="headerlink" title="攻击流程简化"></a>攻击流程简化</h3><ol>
+<li><strong>利用漏洞</strong>：攻击者利用打印服务（SpoolService）中的一个漏洞，通过MS-RPRN（Print System Remote Protocol）RPC接口，让目标服务器发起SMB认证，并通过中间人攻击将认证的安全级别降低为未签名（Drop the MIC），这样攻击者可以拦截和篡改认证过程。</li>
+<li><strong>转发认证请求</strong>：攻击者通过降级后的SMB认证请求，将目标服务器的认证请求转发到主域控的LDAPS服务，绕过正常的认证检查。</li>
+<li><strong>创建计算机帐户</strong>：攻击者创建一个计算机帐户，使其成为一个合法的服务帐户（ServiceA），并通过RBCD（基于资源的约束委派）将该计算机帐户的权限委派给辅助域控服务器。</li>
+<li><strong>S4U协议提权</strong>：通过S4U（Service for User）协议，攻击者以域管理员身份登录到辅助域控服务器的CIFS服务，从而获得对辅助域控服务器的控制权限。</li>
+</ol>
+<p><strong>总结</strong>：攻击者通过中间人攻击降低认证安全性，将目标服务器的认证请求转发到主域控，再利用RBCD和S4U协议提升权限，最终获取域管理员权限。</p>
+<h3 id="Drop-The-MIC"><a href="#Drop-The-MIC" class="headerlink" title="Drop The MIC"></a>Drop The MIC</h3><p>NTLM认证包含三部分消息：NTLM_NEGOTIATE、NTLM_CHALLENGE、NTLM_AUTHENTICATE，分别对应认证的三步，为了确保消息在网络传输中不被恶意篡改，NTLM_AUTHENTICATE部分加入了MIC(Message Integrity Code)字段，采用HMAC_MD5对这三种消息统一做了签名校验，任何一步中的消息被篡改均会导致签名失效。</p>
+<p>但是由于不是所有客户端都支持MIC，比如Windows XP&#x2F;2003，所以也许为了保持向后兼容，该字段也并非必须的。在去掉NTLM_AUTHENTICATE消息中MIC字段的同时，还需要修改&#x2F;去除一系列其它字段，以让服务端完全相信客户端不支持MIC，从而不对NTLM认证进行签名校验。也就是实现了将基于SMB的NTLM认证(默认客户端协商进行签名)降级为未签名的状态。未签名的NTLM可顺利转发至域控的LDAPS服务进行认证。</p>
+<blockquote>
+<p><strong>本质</strong>：篡改请求包让服务端向下兼容，认为攻击者是老版本客户端，没法使用签名的NTLM认证，由此绕过签名实现中间人攻击。</p>
+</blockquote>
+<h3 id="Relay-NTLM（in-SMB）to-LDAPS"><a href="#Relay-NTLM（in-SMB）to-LDAPS" class="headerlink" title="Relay NTLM（in SMB）to LDAPS"></a>Relay NTLM（in SMB）to LDAPS</h3><ol>
+<li>触发辅助域控服务器的打印机服务BUG，令其向攻击者控制的主机发起SMB认证。</li>
+<li>利用ntlmrelayx.py将基于SMB的NTLM认证请求转发至主域控的LDAPS服务(这里不能转发至LDAP服务是因为只有LDAPS服务才具有创建计算机帐户的权限)，–remove-mic去除签名相关信息，实现NTLM安全降级，–delegation-access创建新的计算机帐户并授予其对转发的计算机帐户(即辅助域控服务器)的基于资源的约束委派权限。</li>
+<li>利用新创建的计算机帐户”假冒”域管理员身份向域控TGS服务申请辅助域控服务器HOST服务的服务票据，可进一步dump出辅助域控服务器上所有用户的NTHash。也就是说，控制了辅助域控服务器的计算机帐户，即可以通过基于资源的约束委派特性获取该服务器的系统权限。</li>
+</ol>
+<h2 id="Mitm6-NTLM-Relay-Kerberos-Delegation"><a href="#Mitm6-NTLM-Relay-Kerberos-Delegation" class="headerlink" title="Mitm6 &amp; NTLM Relay &amp; Kerberos Delegation"></a>Mitm6 &amp; NTLM Relay &amp; Kerberos Delegation</h2><p>通过IPv6中间人攻击、NTLM转发、基于资源的约束委派特性的组合利用，攻击者可获取局域网同一广播域内任意域内主机系统权限。</p>
+<h3 id="Mitm6-Overview"><a href="#Mitm6-Overview" class="headerlink" title="Mitm6 Overview"></a>Mitm6 Overview</h3><p>即使在IPv4网络中，Windows系统默认也会通过DHCPv6协议申请IPv6地址，并且会优先使用IPv6的DNS服务器去解析IPv4及IPv6域名A记录。攻击者在局域网内监听DHCPv6广播请求，伪造响应，分配给目标主机恶意DNS服务器(IPv6)，劫持目标主机首选DNS服务器。目标主机发起DNS请求时，攻击者可对其进行DNS欺骗。</p>
+<blockquote>
+<p><strong>核心</strong>：劫持DNS服务器，根据IPv6优先级直接进行DNS欺骗。</p>
+</blockquote>
+<h3 id="WPAD-Overview"><a href="#WPAD-Overview" class="headerlink" title="WPAD Overview"></a>WPAD Overview</h3><p>WPAD全称为Windows Proxy Auto Detection，在企业网络中用来自动检测访问互联网的网络代理，提供wpad.dat文件的服务器IP地址首先会通过DNS服务器进行解析，如果解析失败，客户端会通过广播的方式寻求解析，比如LLMNR(Link-Local Multicast Name Resolution)，在同一广播域内的攻击者此时回应客户端，声称其自身为WPAD主机，客户端想要访问wpad.dat文件，就会向攻击者发起HTTP请求，攻击者此时要求客户端进行NTLM认证(HTTP 401)，客户端自动向其发起认证，该过程无需用户交互即可完成。攻击者可进一步将基于HTTP的NTLM认证转发至其它服务。</p>
+<p>微软在2016年发布了安全更新(MS16-077)，做了以下两点修改缓解此类攻击：</p>
+<ol>
+<li>客户端不再通过广播协议进行WPAD解析，仅能通过DNS服务解析。</li>
+<li>即使WPAD主机要求认证(HTTP 401)，客户端也不再自动发起NTLM认证。</li>
+</ol>
+<p>具体来说，2016前利用了WPAD协议在DNS解析失败后回退到LLMNR&#x2F;NBNS广播机制的弱点。攻击者通过回应客户端的广播请求，伪装成WPAD服务器，从而诱导客户端将代理配置请求发送给自己。一旦客户端连接到恶意WPAD服务器，攻击者就可以窃取NTLM凭据。</p>
+<h4 id="对应2016补丁的绕过方式"><a href="#对应2016补丁的绕过方式" class="headerlink" title="对应2016补丁的绕过方式"></a>对应2016补丁的绕过方式</h4><ul>
+<li><strong>第一条缓解措施</strong>：WPAD仅能通过DNS解析，利用mitm6劫持客户端的首选DNS服务器，即可轻易绕过。</li>
+<li><strong>第二条缓解措施</strong>：客户端不再向WPAD主机发起NTLM认证，研究人员发现，如果此时向客户端提供”有效的”wpad.dat文件，并在其中指定攻击者为代理服务器，当客户端应用程序使用Windows API访问互联网时，会把攻击者当作是代理服务器，客户端向攻击者发起连接请求时，攻击者回应HTTP 407(Proxy Authentication)，这不同于之前的HTTP 401认证，客户端会再次自动向其发起NTLM认证。</li>
+</ul>
+<h2 id="NTLM-Relay-Kerberos-Delegation"><a href="#NTLM-Relay-Kerberos-Delegation" class="headerlink" title="NTLM Relay &amp; Kerberos Delegation"></a>NTLM Relay &amp; Kerberos Delegation</h2><h3 id="攻击链概述"><a href="#攻击链概述" class="headerlink" title="攻击链概述"></a>攻击链概述</h3><h4 id="1-WPAD劫持-通过mitm6-DNS欺骗"><a href="#1-WPAD劫持-通过mitm6-DNS欺骗" class="headerlink" title="1. WPAD劫持 (通过mitm6&#x2F;DNS欺骗)"></a>1. WPAD劫持 (通过mitm6&#x2F;DNS欺骗)</h4><p><strong>目标</strong>：让目标主机（计算机账户）误以为攻击者是WPAD代理服务器，并强制其通过攻击者进行网络连接。</p>
+<p><strong>实现方式</strong>：</p>
+<ul>
+<li><strong>开机阶段利用DHCPv6&#x2F;SLAAC</strong>：攻击者利用mitm6等工具，在目标主机开机时，伪造DHCPv6服务器或利用IPv6的自动配置，将自己设置为目标主机的首选DNS服务器。</li>
+<li><strong>DNS欺骗</strong>：当目标主机尝试解析任何域名（包括wpad.internal.corp）时，攻击者作为伪造的DNS服务器，会将这些域名解析到攻击者自身的IP地址。</li>
+<li><strong>提供恶意wpad.dat</strong>：当目标主机向被劫持的wpad.internal.corp发起请求时，攻击者会提供一个”合法”的wpad.dat文件，其中指定攻击者自身为代理服务器。</li>
+<li><strong>触发HTTP 407</strong>：目标主机在后续的网络访问中，会尝试通过这个代理（攻击者）进行连接。此时，攻击者返回HTTP 407 (Proxy-Authenticate) 响应，要求目标主机进行NTLM认证。</li>
+</ul>
+<h4 id="2-NTLM-Relay-基于HTTP到LDAPS"><a href="#2-NTLM-Relay-基于HTTP到LDAPS" class="headerlink" title="2. NTLM Relay (基于HTTP到LDAPS)"></a>2. NTLM Relay (基于HTTP到LDAPS)</h4><p><strong>目标</strong>：获取目标主机（计算机账户）的NTLM哈希，并将其转发到域控的LDAPS服务进行认证。</p>
+<p><strong>实现方式</strong>：</p>
+<ul>
+<li><strong>目标主机自动NTLM认证</strong>：收到HTTP 407后，目标主机（以其计算机账户身份）会自动向攻击者发起基于HTTP的NTLM认证（发送NTLM哈希）。</li>
+<li><strong>NTLM Relay到LDAPS</strong>：攻击者捕获到目标主机的NTLM认证请求后，将其实时中继到域控的LDAPS服务。</li>
+<li><strong>无需协商签名</strong>：关键点在于，基于HTTP的NTLM认证默认不协商签名（或协商的签名级别较低），这使得攻击者可以顺利地中继认证请求，而不会被签名验证所阻碍。如果目标LDAPS服务强制要求签名（LDAP Channel Binding&#x2F;Signing），则此步骤可能会失败，但通常情况下，默认配置下是可以成功的。</li>
+</ul>
+<h4 id="3-利用基于资源的约束委派-RBCD"><a href="#3-利用基于资源的约束委派-RBCD" class="headerlink" title="3. 利用基于资源的约束委派 (RBCD)"></a>3. 利用基于资源的约束委派 (RBCD)</h4><p><strong>目标</strong>：在域控上修改目标主机的属性，使其允许攻击者以任意身份（包括域管理员）登录目标主机。</p>
+<p><strong>实现方式</strong>：</p>
+<ul>
+<li><strong>LDAPS认证成功</strong>：由于攻击者成功地将目标主机的NTLM认证中继到了域控的LDAPS服务，域控会认为目标主机本身正在进行认证，并成功通过认证。</li>
+<li><strong>修改msDS-AllowedToActOnBehalfOfOtherIdentity属性</strong>：攻击者利用成功认证的会话，通过LDAPS协议，修改目标主机计算机账户的msDS-AllowedToActOnBehalfOfOtherIdentity属性。这个属性允许指定的服务账户（或计算机账户）模拟其他用户（包括域管理员）在目标主机上进行认证。攻击者会将自己的控制的账户（或直接指定域管理员账户）添加到这个属性中。</li>
+<li><strong>获取目标主机权限</strong>：一旦修改成功，攻击者就可以使用任意域用户（例如域管理员）的身份，通过Kerberos S4U2Proxy机制，向域控请求针对目标主机的服务票据。域控会签发这个票据，允许攻击者以域管理员的身份登录到目标主机，从而完全控制目标主机。</li>
+</ul>
+<h3 id="攻击链的威力"><a href="#攻击链的威力" class="headerlink" title="攻击链的威力"></a>攻击链的威力</h3><ul>
+<li><strong>无需用户交互</strong>：整个过程在目标主机开机或进行网络访问时自动发生，无需用户登录或任何交互。</li>
+<li><strong>利用计算机账户权限</strong>：攻击利用的是目标主机自身的计算机账户权限，而不是某个特定用户的权限。计算机账户在域中通常具有一定的默认权限。</li>
+<li><strong>绕过传统防御</strong>：结合了多种技术，绕过了MS16-077的缓解措施，并利用了Active Directory的委派特性。</li>
+<li><strong>高权限获取</strong>：最终可以直接以域管理员身份登录目标主机，意味着对该主机拥有完全控制权，并可以进一步在网络中横向移动。</li>
+</ul>
+<h3 id="攻击流程总结"><a href="#攻击流程总结" class="headerlink" title="攻击流程总结"></a>攻击流程总结</h3><ol>
+<li><strong>WPAD劫持</strong>：攻击者伪装成DNS服务器，欺骗目标主机将代理请求发给自己，并提供一个恶意代理配置。</li>
+<li><strong>NTLM中继</strong>：目标主机尝试通过攻击者代理上网时，攻击者要求NTLM认证。目标主机自动发送NTLM哈希，攻击者将这个哈希转发给域控的LDAPS服务，成功以目标主机的身份在域控上认证。</li>
+<li><strong>RBCD利用</strong>：攻击者利用成功认证的会话，修改目标主机在域控上的属性，允许攻击者以域管理员等高权限身份登录到目标主机，从而完全控制它。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：通过劫持代理配置，诱导目标主机进行NTLM认证，然后将这个认证转发给域控，最后利用域控对目标主机的信任（RBCD）来获取目标主机的管理员权限。</p>
+</blockquote>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.sudo.online/posts/416f70e6/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.sudo.online/posts/416f70e6/&title=域基础漏洞 - Satoru's Blog&summary=简单介绍了微软实现第三方协议下产生的域安全漏洞"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=域基础漏洞 - Satoru's Blog&amp;body=https://blog.sudo.online/posts/416f70e6/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.sudo.online/posts/416f70e6/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/877fc705/">身份隐藏_无痕系列(1)</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/8faf7079/">域安全基础</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body beaudar'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="beaudar" repo="sat0ru-qwq/blog-comment" issue-term="pathname" theme="preferred-color-scheme" input-position="top" comment-order="desc" loading="true" branch="main"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">Satoru</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows%E5%9F%9F%E7%8E%AF%E5%A2%83%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3"><span class="toc-text">Windows域环境攻击技术详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GPP-MS14-025"><span class="toc-text">GPP (MS14-025)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GoldenPAC-MS14-068"><span class="toc-text">GoldenPAC (MS14-068)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4"><span class="toc-text">攻击步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrivExchange-SSRF-NTLM-Relay"><span class="toc-text">PrivExchange (SSRF &amp; NTLM Relay)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchange-SSRF"><span class="toc-text">Exchange SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchange%E6%9D%83%E9%99%90%E8%BF%87%E9%AB%98-too-high-privileges-by-default"><span class="toc-text">Exchange权限过高 (too high privileges by default)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-Relay"><span class="toc-text">NTLM Relay</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NTLM-Relay-101"><span class="toc-text">NTLM Relay 101</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reflective-NTLM-Relay-is-Dead"><span class="toc-text">Reflective NTLM Relay is Dead?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cross-protocol-relaying"><span class="toc-text">Cross protocol relaying</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Relay-NTLM%EF%BC%88in-HTTP%EF%BC%89to-LDAP"><span class="toc-text">Relay NTLM（in HTTP）to LDAP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-Tampering-Drop-The-MIC-RBCD"><span class="toc-text">NTLM Tampering (Drop The MIC) &amp; RBCD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E7%AE%80%E5%8C%96"><span class="toc-text">攻击流程简化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Drop-The-MIC"><span class="toc-text">Drop The MIC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Relay-NTLM%EF%BC%88in-SMB%EF%BC%89to-LDAPS"><span class="toc-text">Relay NTLM（in SMB）to LDAPS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mitm6-NTLM-Relay-Kerberos-Delegation"><span class="toc-text">Mitm6 &amp; NTLM Relay &amp; Kerberos Delegation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mitm6-Overview"><span class="toc-text">Mitm6 Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WPAD-Overview"><span class="toc-text">WPAD Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%942016%E8%A1%A5%E4%B8%81%E7%9A%84%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F"><span class="toc-text">对应2016补丁的绕过方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-Relay-Kerberos-Delegation"><span class="toc-text">NTLM Relay &amp; Kerberos Delegation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%93%BE%E6%A6%82%E8%BF%B0"><span class="toc-text">攻击链概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-WPAD%E5%8A%AB%E6%8C%81-%E9%80%9A%E8%BF%87mitm6-DNS%E6%AC%BA%E9%AA%97"><span class="toc-text">1. WPAD劫持 (通过mitm6&#x2F;DNS欺骗)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-NTLM-Relay-%E5%9F%BA%E4%BA%8EHTTP%E5%88%B0LDAPS"><span class="toc-text">2. NTLM Relay (基于HTTP到LDAPS)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E5%9F%BA%E4%BA%8E%E8%B5%84%E6%BA%90%E7%9A%84%E7%BA%A6%E6%9D%9F%E5%A7%94%E6%B4%BE-RBCD"><span class="toc-text">3. 利用基于资源的约束委派 (RBCD)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%93%BE%E7%9A%84%E5%A8%81%E5%8A%9B"><span class="toc-text">攻击链的威力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="toc-text">攻击流程总结</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #beaudar');
+  util.viewportLazyload(el, load_beaudar, false);
+
+  function load_beaudar() {
+    if (!el) return;
+    try {
+      el.innerHTML = '';
+    } catch (error) {
+      console.error(error);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://beaudar.lipk.org/client.js';
+    script.async = true;
+    for (const key of Object.keys(el.attributes)) {
+      const attr = el.attributes[key];
+      if (['class', 'id'].includes(attr.name) === false) {
+        script.setAttribute(attr.name, attr.value);
+      }
+    }
+    el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.min.css" media="all">
+
+
+
+<!-- inject -->
+
+</div></body></html>
