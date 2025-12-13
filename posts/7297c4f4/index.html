@@ -1,0 +1,1094 @@
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>JS对抗与逆向_实战篇 - Satoru's Blog</title>
+
+  
+    <meta name="description" content="针对JS加解密痛点对抗笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS对抗与逆向_实战篇">
+<meta property="og:url" content="https://blog.sudo.online/posts/7297c4f4/">
+<meta property="og:site_name" content="Satoru&#39;s Blog">
+<meta property="og:description" content="针对JS加解密痛点对抗笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.sudo.online/img/avatar.jpg">
+<meta property="article:published_time" content="2025-08-24T06:20:43.000Z">
+<meta property="article:modified_time" content="2025-12-13T06:44:32.717Z">
+<meta property="article:author" content="Satoru">
+<meta property="article:tag" content="JS">
+<meta property="article:tag" content="Re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sudo.online/img/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="JS,Re">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Satoru's Blog" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/img/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg"},"dateCreated":"2025-08-24T14:20:43+08:00","dateModified":"2025-12-13T14:44:32+08:00","datePublished":"2025-08-24T14:20:43+08:00","description":"","headline":"JS对抗与逆向_实战篇","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.sudo.online/posts/7297c4f4/"},"publisher":{"@type":"Organization","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg","logo":{"@type":"ImageObject","url":"/img/avatar.jpg"}},"url":"https://blog.sudo.online/posts/7297c4f4/","keywords":"JS, Re","image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/img/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Satoru's Blog</div><div class="sub cap">Learning Cyber Security...</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M3.464 20.536C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535" opacity="0.5"/><path fill="currentColor" d="M9.5 8.75A3.25 3.25 0 1 0 12.75 12a.75.75 0 0 1 1.5 0A4.75 4.75 0 1 1 9.5 7.25a.75.75 0 0 1 0 1.5"/><path fill="currentColor" d="M17.75 12a3.25 3.25 0 0 1-3.25 3.25a.75.75 0 0 0 0 1.5A4.75 4.75 0 1 0 9.75 12a.75.75 0 0 0 1.5 0a3.25 3.25 0 0 1 6.5 0"/></svg></a><a class="nav-item" title="关于" href="/about/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">无限进步<<<</span></div><div class="widget-body fs14"><p>银鞍照白马，飒沓如流星</p>
+</div></widget>
+
+<widget class="widget-wrapper linklist"><div class="widget-body fs14">
+<div class="linklist left" style="grid-template-columns:repeat(1,1fr);">
+<a class="link" title="渗透测试" href="/categories/penetration"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M14 21.71A7 7 0 0 1 5 15v-3.062A3.94 3.94 0 0 1 8.938 8h6.124A3.94 3.94 0 0 1 19 11.938V15a6.98 6.98 0 0 1-2 4.899"/><path fill="currentColor" d="M8.25 7.5a.75.75 0 0 0-1.5 0zm-.615-2.917a.75.75 0 1 0 1.246.834zM17.25 8.5v-1h-1.5v1zm-10.5-1v1h1.5v-1zm10.5 0c0-2.9-2.35-5.25-5.25-5.25v1.5a3.75 3.75 0 0 1 3.75 3.75zM12 2.25a5.25 5.25 0 0 0-4.365 2.333l1.246.834A3.75 3.75 0 0 1 12 3.75z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15"/></g></svg><span>渗透测试</span></div></a>
+<a class="link" title="代码审计" href="/categories/code-audit"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="m17 7.83l1.697 1.526c1.542 1.389 2.313 2.083 2.313 2.974c0 .89-.771 1.585-2.314 2.973L17 16.83"/><path d="m13.987 5l-3.974 14.83" opacity="0.5"/><path d="M7 7.83L5.304 9.356C3.76 10.745 2.99 11.44 2.99 12.33s.771 1.585 2.314 2.973L7 16.83"/></g></svg><span>代码审计</span></div></a>
+<a class="link" title="安全研究" href="/categories/research"><div class="flex"><?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 16C44 22.6274 38.6274 28 32 28C29.9733 28 28.0639 27.4975 26.3896 26.6104L9 44L4 39L21.3896 21.6104C20.5025 19.9361 20 18.0267 20 16C20 9.37258 25.3726 4 32 4C34.0267 4 35.9361 4.50245 37.6104 5.38959L30 13L35 18L42.6104 10.3896C43.4975 12.0639 44 13.9733 44 16Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>安全研究</span></div></a></div></div></widget>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/a27ef720/"><span class="title">身份隐藏_无痕系列(2)</span></a><a class="item title" href="/posts/bb65c661/"><span class="title">身份隐藏_无痕系列(3)</span></a><a class="item title" href="/posts/877fc705/"><span class="title">身份隐藏_无痕系列(1)</span></a><a class="item title" href="/posts/afb5c91c/"><span class="title">一些时报</span></a><a class="item title" href="/posts/c6650469/"><span class="title">仅仅拿下了域控？</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/sat0ru-qwq" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="mailto:s4t0ru@qq.com" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/research/">research</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-08-24T06:20:43.000Z">2025-08-24</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-12-13T06:44:32.717Z">2025-12-13</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>JS对抗与逆向_实战篇</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h2><p>JS的对抗 <strong>本质无非就是开发者通过一系列加密算法防止用户恶意爆破，攻击者通过逆向，推测与实践实现自加密逻辑爆破的过程。</strong></p>
+<p><img src="/posts/7297c4f4/image-20250822222901893.png" alt="image-20250822222901893"></p>
+<h2 id="JS逆向"><a href="#JS逆向" class="headerlink" title="JS逆向"></a>JS逆向</h2><p>懂得基础的JS知识，和调试方法，可以移步到<a target="_blank" rel="noopener" href="https://blog.sudoer.online/posts/92226b38/">基础篇</a> 这里主要就不讲解如何详细的逆向了，我们直接切入正题： 如何<strong>解决数据包的修改</strong>问题。</p>
+<p> 关于<strong>如何找到JS中的加解密的方法</strong>，不一定非得找到<strong>加解密函数</strong>。无论是APP还是JS中可以先找到<strong>明文点</strong>。</p>
+<p>什么是明文点？</p>
+<p> 在前端进行复杂的请求操作时，肯定会经过一系列从A函数–&gt;B函数–&gt;C函数–&gt;D函数–&gt;E函数之类的流程， 那么在这个流程中，假设D函数是加密函数，那么<strong>ABC函数中原始请求参数</strong>均是明文的，这就是明文点，找到明文点后再一步步调试， 其实就能顺腾摸瓜找到加密函数了。</p>
+<p><img src="/posts/7297c4f4/20240523233615-31294a46-191a-1.png" alt="img"></p>
+<p>这里推荐一个环境靶场:<a target="_blank" rel="noopener" href="http://39.98.108.20:8085/">http://39.98.108.20:8085</a></p>
+<p><strong>项目地址</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/0ctDay/encrypt-decrypt-vuls/">0ctDay&#x2F;encrypt-decrypt-vuls: 加解密逻辑漏洞靶场 (github.com)</a></p>
+<h3 id="v-jstools"><a href="#v-jstools" class="headerlink" title="v_jstools"></a>v_jstools</h3><p><a target="_blank" rel="noopener" href="https://github.com/cilame/v_jstools">cilame&#x2F;v_jstools: 模仿着写一个 chrome 插件，用来快速调试前端 js 代码。 (github.com)</a></p>
+<p>一款比较好用的工具，能够一键监测JS中指定函数的调用</p>
+<p>这里对工具的使用不做过多讲解，感兴趣的直接去看<a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/14066">保姆级教程—前端加密的对抗（附带靶场）-先知社区</a>的相关内容</p>
+<h4 id="以简单的例子使用与摸索"><a href="#以简单的例子使用与摸索" class="headerlink" title="以简单的例子使用与摸索"></a>以简单的例子使用与摸索</h4><p>就我而言 摸索了一下 主要还是以<strong>标准hook配置为主</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824150142443.png" alt="image-20250824150142443"></p>
+<p>使用<strong>正确账密123&#x2F;123</strong>并hook调试，取得更多有价值的信息</p>
+<p>当登录成功时，我们可以<strong>以功能点为导向反向推理加密逻辑</strong>.</p>
+<p>可以很清楚的看到数据的完整流动</p>
+<ul>
+<li><p>明文点，用户<strong>传入账密和验证码</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824153903848.png" alt="image-20250824153903848"></p>
+<p><img src="/posts/7297c4f4/image-20250824160538049.png" alt="image-20250824160538049"></p>
+<p>这里可以看见<strong>t.data就是用户传入的信息</strong></p>
+</li>
+<li><p>用户登录认证逻辑 <strong>生成加密载荷并获取服务端响应</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824153750016.png" alt="image-20250824153750016"></p>
+<p>可<strong>结合网络查看请求包内容</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824162223389.png" alt="image-20250824162223389"></p>
+</li>
+<li><p><strong>回显登录成功</strong> 并重定向到<strong>dashboard</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824154809574.png"></p>
+<p><img src="/posts/7297c4f4/image-20250824154847949.png" alt="image-20250824154847949"></p>
+</li>
+</ul>
+<p>这里就完整的实现了<strong>一整套认证逻辑</strong>，本质上也是配合断点一步一步调试 得到<strong>完整的数据传输日志，同时也能利用函数步过大致定位到对应的加密逻辑</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824162036799.png" alt="image-20250824162036799"></p>
+<p><img src="/posts/7297c4f4/image-20250824155941125.png" alt="image-20250824155941125"></p>
+<p>在这样的定位过程中 就能确定经过 <code>t.data = l(n)</code>后，data内容为密文，<strong>结合前面对登录功能点的推测与跟进，可确定t.data 即为 加密后的内容， 那么l() 函数即为加密函数</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824162317893.png" alt="image-20250824162317893"></p>
+<p>这个时候<strong>就可以进行跟进</strong>，典型的AES加密,甚至下面就是解密函数。<strong>其中t参数为原始的内容，f参数为密钥，h为密码。</strong></p>
+<p><img src="/posts/7297c4f4/image-20250824162401524.png" alt="image-20250824162401524"></p>
+<p>同时所谓的签名 时间戳防绕也可以在最开始定位的加密逻辑中找到，<strong>那么这个时候就可以愉快的写脚本实现爆破了</strong>。</p>
+<p><img src="/posts/7297c4f4/20240523233916-9d3c35e0-191a-1.png" alt="img"></p>
+<h5 id="1-为什么不用搜索的方式"><a href="#1-为什么不用搜索的方式" class="headerlink" title="1. 为什么不用搜索的方式"></a>1. 为什么不用搜索的方式</h5><p> 如果能搜索到当然好，比如这个环境可以直接通过搜索AES的方式找到上下文。</p>
+<p> 但现在大部分webpack项目都自带混淆，在生产环境中许多变量和字符无法直接搜索，即使搜索到了阅读上下文也看不懂代码到底是个什么意思。</p>
+<h5 id="2-明文点"><a href="#2-明文点" class="headerlink" title="2. 明文点"></a>2. 明文点</h5><p> 上文提到明文点，在这个过程中我们跟踪的两个函数都是明文点，一个是v_jstools 提示的函数位置 u.interceptors.request.use((function(t){} ，还有一个是l()函数。<strong>生产情况下，我们可能无法直接分析出该函数的作用，即便看不懂，也是大有用处，</strong></p>
+<h2 id="改包手法"><a href="#改包手法" class="headerlink" title="改包手法"></a>改包手法</h2><p>主流的修改方式。</p>
+<p><strong>分类</strong></p>
+<p>1、 修改当前的数据包</p>
+<p>浏览器<strong>发包</strong>后，代理到burp上或通过其他的形式修改这个数据包的内容，主要<strong>针对当前数据包的修改</strong></p>
+<p>场景： 分析请求参数、添加额外参数、绕过前端校验等等</p>
+<p>2、主动发包的加密与解密</p>
+<p><strong>脱离浏览器， 主动发包并加密， 对响应的数据包解密</strong></p>
+<p>场景： 自动化工具插入漏洞payload、暴力破解、重放测试等</p>
+<h3 id="修改当前数据包"><a href="#修改当前数据包" class="headerlink" title="修改当前数据包"></a>修改当前数据包</h3><h4 id="作用域修改法"><a href="#作用域修改法" class="headerlink" title="作用域修改法"></a><strong>作用域修改法</strong></h4><p>这里有个账号: test 密码:123</p>
+<p>首先我们在表单处输入 test 密码 1234，很明显我们是无法登录的。</p>
+<p>这时我们进入到调试中，走到加密前的一步，直接在作用域中修改即可登录成功</p>
+<p><img src="/posts/7297c4f4/20240523233945-adfa0452-191a-1.png" alt="img"></p>
+<p>这个方式需要在加密启动和签名加签的同时启动</p>
+<h4 id="JS-forward"><a href="#JS-forward" class="headerlink" title="JS-forward"></a><strong>JS-forward</strong></h4><p> 首先我们了解一下JS-forward运行原理，简单来说就是在明文点处插入一段JS代码，<strong>这段代码先通过AJAX请求将现有的请求内容发送给burpsuite，burpsuite拦截并修改内容后，返回到原始变量中，优点是操作比较统一，如果明文点正确，后续所有的改包操作都可以在burpsuite中进行</strong></p>
+<p><img src="/posts/7297c4f4/20240523234017-c19dc07a-191a-1.png" alt="img"></p>
+<p><em>a. 找到明文点</em></p>
+<p>工具链接:<strong><a target="_blank" rel="noopener" href="https://github.com/G-Security-Team/JS-Forward">JS-Forward</a></strong></p>
+<p>确认明文变量名，然后启动JS-forward</p>
+<p>这里我们需要将变量名向前看一点，确认明文变量就是t.data</p>
+<p><img src="/posts/7297c4f4/20240523234033-caf98fbe-191a-1.png" alt="img"></p>
+<p>启动JS-forward</p>
+<p>输入变量名: t.data</p>
+<p>输入数据类型： json (JS原始对象也可设置为JSON)</p>
+<p>输入请求标识： REQUEST</p>
+<blockquote>
+<p>这里的请求标识仅仅作为标识使用， 没有任何意义， 主要是为了在burpsuite中区分请求包和响应包</p>
+</blockquote>
+<p>输入$end 结束后， 会监听2个端口 分别是38080， 28080， 还会生成一段JS代码我们留作后续使用。</p>
+<p><img src="/posts/7297c4f4/20240523234050-d536307c-191a-1.png" alt="img"></p>
+<p><em>b. 插入JS代码</em></p>
+<p>JS-forward 的使用<strong>尽量在明文点的函数第一行插入相关代码，因为不知道后续代码会做什么样的操作。</strong></p>
+<p>具体的插入方式</p>
+<p>b1： 找到F12–源代码–替换（覆盖）–点击选择文件夹–选择我们硬盘中一个空文件夹</p>
+<p><img src="/posts/7297c4f4/20240523234108-dffd295c-191a-1.png" alt="img"></p>
+<p>如果浏览器<strong>有提示点击允许</strong></p>
+<p><img src="/posts/7297c4f4/20240523234126-ea58f2fa-191a-1.png" alt="img"></p>
+<p>具体的插入方式</p>
+<p>b1： 找到F12–源代码–替换（覆盖）–点击选择文件夹–选择我们硬盘中一个空文件夹</p>
+<p><img src="/posts/7297c4f4/20240523234108-dffd295c-191a-1-1756260667969-13.png" alt="img"></p>
+<p><img src="/posts/7297c4f4/20240523234139-f2164b78-191a-1.png" alt="img"></p>
+<p>b2: 在 <strong>网页–明文点JS文件处–右键–替换内容</strong></p>
+<p><strong>（因为只有这样才能修改JS中的代码）</strong></p>
+<p><img src="/posts/7297c4f4/20240523234156-fc485672-191a-1.png" alt="img"></p>
+<p>b3: <strong>将JS-forward中生成的代码，复制到函数第一行，Ctrl+S保存</strong></p>
+<p><img src="/posts/7297c4f4/20240523234216-080dde8c-191b-1.png" alt="img"></p>
+<p><em>c. 打开burpsuite</em></p>
+<p>关闭调试功能或关闭F12，刷新页面，再次发包时即可接收到明文信息</p>
+<p><img src="/posts/7297c4f4/20240523234230-10d9530c-191b-1.png" alt="img"></p>
+<p><em>d. 注意</em></p>
+<ol>
+<li>能够理解原理的话， 尽量自己思考思考。此功能与浏览器–burpsuite代理无关，浏览器的代理可不设置为burpsuite。</li>
+<li>另外在实际测试过程中<strong>谷歌浏览器</strong>会报CORS错误，<strong>edge</strong>正常，具体原因不明，以后有机会再分析</li>
+</ol>
+<p><strong>本质就是 我又新建了一个代理服务器 相当于两个代理服务器负责不同的职能 一个是负责爬取明文点转发并转回 Burp负责处理改包罢了</strong></p>
+<h3 id="主动发包的加密与解密"><a href="#主动发包的加密与解密" class="headerlink" title="主动发包的加密与解密"></a>主动发包的加密与解密</h3><p> 以上方法只适合修改浏览器的提交操作后的数据包修改</p>
+<ul>
+<li>优点：是简单易上手，就算是复杂的加密环境，只要找到明文点，后续工作不太复杂。</li>
+<li>缺点：是无法应对主动发包的情况，比如要使用被动扫描工具，暴力破解，重放测试等需求的时候，无法自动化完成。</li>
+</ul>
+<p>所以我们介绍第二类的解决方案，为什么不直接介绍这个方式呢？主要还是因为主动发包的加密和解密更加复杂，需要读懂<strong>目标JS代码环境中防范改包</strong>的一些<strong>业务逻辑</strong>，如果目标的JS代码混淆和加密并不是特别厉害，还是可以一试的。</p>
+<p> 在这之前再来了解一款工具</p>
+<h4 id="JS-RPC"><a href="#JS-RPC" class="headerlink" title="JS-RPC"></a><em>JS-RPC</em></h4><p><strong><a target="_blank" rel="noopener" href="https://github.com/jxhczhl/JsRpc">jxhczhl&#x2F;JsRpc: 远程调用(rpc)浏览器方法，免去抠代码补环境 (github.com)</a></strong></p>
+<p> 所谓RPC，翻译过来是<strong>远程调用的意思，简单来说就是搭建一个桥梁让两个不同的应用系统之间一方能主动调用另外一方的api或函数。</strong></p>
+<p> 我们知道浏览器中的加解密都是通过JS实现的，但如果想脱离浏览器在本地运行JS代码最大一个问题就是<strong>如何调用浏览器的api</strong>。举个例子: 比如我们想在python中执行JS中的解密函数，我们通常是两个方法：</p>
+<p><strong>方法：</strong></p>
+<ol>
+<li>读懂JS加密函数的内容，在python中通过python代码使用同样的逻辑来实现。 也就是所谓的<strong>读懂逻辑本地搓</strong></li>
+<li>通过execJs，selenium等框架执行指定的JS代码，理想状态是好的。<strong>但是</strong>，如果目标环境的加密很复杂，又伴随着一些复杂的对象操作，需要解析各种变量以及补环境来满足函数调用，<strong>意味着可能我们还没开始渗透就已经脱了几层皮了。</strong></li>
+</ol>
+<p> 所以我们可以使用这款工具提高渗透测试前期的效率。</p>
+<p> JS-RPC这款工具的**工作原理就是在控制台中执行一段代码，通过websocket与本地的python服务端相连。这样一来如果python中想要执行代码，只需要通过RPC即可调用控制台中的函数了，**不需要再本地还原。</p>
+<p><img src="/posts/7297c4f4/20240523234313-29f4d906-191b-1.png" alt="img"></p>
+<h5 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h5><h5 id="1-先打开客户端，然后打开控制台，将JSrpc的注入代码输入"><a href="#1-先打开客户端，然后打开控制台，将JSrpc的注入代码输入" class="headerlink" title="1. 先打开客户端，然后打开控制台，将JSrpc的注入代码输入"></a>1. 先打开客户端，然后打开控制台，将JSrpc的注入代码输入</h5><p><img src="/posts/7297c4f4/20240523234330-349effbc-191b-1.png" alt="img"></p>
+<p>先输入函数内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line">function Hlclient(wsURL) &#123;</span><br><span class="line">    this.wsURL = wsURL;</span><br><span class="line">    this.handlers = &#123;</span><br><span class="line">        _execjs: function (resolve, param) &#123;</span><br><span class="line">            var res = eval(param)</span><br><span class="line">            if (!res) &#123;</span><br><span class="line">                resolve(&quot;没有返回值&quot;)</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                resolve(res)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    this.socket = undefined;</span><br><span class="line">    if (!wsURL) &#123;</span><br><span class="line">        throw new Error(&#x27;wsURL can not be empty!!&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line">    this.connect()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Hlclient.prototype.connect = function () &#123;</span><br><span class="line">    console.log(&#x27;begin of connect to wsURL: &#x27; + this.wsURL);</span><br><span class="line">    var _this = this;</span><br><span class="line">    try &#123;</span><br><span class="line">        this.socket = new WebSocket(this.wsURL);</span><br><span class="line">        this.socket.onmessage = function (e) &#123;</span><br><span class="line">            _this.handlerRequest(e.data)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (e) &#123;</span><br><span class="line">        console.log(&quot;connection failed,reconnect after 10s&quot;);</span><br><span class="line">        setTimeout(function () &#123;</span><br><span class="line">            _this.connect()</span><br><span class="line">        &#125;, 10000)</span><br><span class="line">    &#125;</span><br><span class="line">    this.socket.onclose = function () &#123;</span><br><span class="line">        console.log(&#x27;rpc已关闭&#x27;);</span><br><span class="line">        setTimeout(function () &#123;</span><br><span class="line">            _this.connect()</span><br><span class="line">        &#125;, 10000)</span><br><span class="line">    &#125;</span><br><span class="line">    this.socket.addEventListener(&#x27;open&#x27;, (event) =&gt; &#123;</span><br><span class="line">        console.log(&quot;rpc连接成功&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    this.socket.addEventListener(&#x27;error&#x27;, (event) =&gt; &#123;</span><br><span class="line">        console.error(&#x27;rpc连接出错,请检查是否打开服务端:&#x27;, event.error);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line">Hlclient.prototype.send = function (msg) &#123;</span><br><span class="line">    this.socket.send(msg)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Hlclient.prototype.regAction = function (func_name, func) &#123;</span><br><span class="line">    if (typeof func_name !== &#x27;string&#x27;) &#123;</span><br><span class="line">        throw new Error(&quot;an func_name must be string&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (typeof func !== &#x27;function&#x27;) &#123;</span><br><span class="line">        throw new Error(&quot;must be function&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(&quot;register func_name: &quot; + func_name);</span><br><span class="line">    this.handlers[func_name] = func;</span><br><span class="line">    return true</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//收到消息后这里处理，</span><br><span class="line">Hlclient.prototype.handlerRequest = function (requestJson) &#123;</span><br><span class="line">    var _this = this;</span><br><span class="line">    try &#123;</span><br><span class="line">        var result = JSON.parse(requestJson)</span><br><span class="line">    &#125; catch (error) &#123;</span><br><span class="line">        console.log(&quot;catch error&quot;, requestJson);</span><br><span class="line">        result = transjson(requestJson)</span><br><span class="line">    &#125;</span><br><span class="line">    //console.log(result)</span><br><span class="line">    if (!result[&#x27;action&#x27;]) &#123;</span><br><span class="line">        this.sendResult(&#x27;&#x27;, &#x27;need request param &#123;action&#125;&#x27;);</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    var action = result[&quot;action&quot;]</span><br><span class="line">    var theHandler = this.handlers[action];</span><br><span class="line">    if (!theHandler) &#123;</span><br><span class="line">        this.sendResult(action, &#x27;action not found&#x27;);</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        if (!result[&quot;param&quot;]) &#123;</span><br><span class="line">            theHandler(function (response) &#123;</span><br><span class="line">                _this.sendResult(action, response);</span><br><span class="line">            &#125;)</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        var param = result[&quot;param&quot;]</span><br><span class="line">        try &#123;</span><br><span class="line">            param = JSON.parse(param)</span><br><span class="line">        &#125; catch (e) &#123;&#125;</span><br><span class="line">        theHandler(function (response) &#123;</span><br><span class="line">            _this.sendResult(action, response);</span><br><span class="line">        &#125;, param)</span><br><span class="line"></span><br><span class="line">    &#125; catch (e) &#123;</span><br><span class="line">        console.log(&quot;error: &quot; + e);</span><br><span class="line">        _this.sendResult(action, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Hlclient.prototype.sendResult = function (action, e) &#123;</span><br><span class="line">    if (typeof e === &#x27;object&#x27; &amp;&amp; e !== null) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            e = JSON.stringify(e)</span><br><span class="line">        &#125; catch (v) &#123;</span><br><span class="line">            console.log(v)//不是json无需操作</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    this.send(action + atob(&quot;aGxeX14&quot;) + e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function transjson(formdata) &#123;</span><br><span class="line">    var regex = /&quot;action&quot;:(?&lt;actionName&gt;.*?),/g</span><br><span class="line">    var actionName = regex.exec(formdata).groups.actionName</span><br><span class="line">    stringfystring = formdata.match(/&#123;..data..:.*..\w+..:\s...*?..&#125;/g).pop()</span><br><span class="line">    stringfystring = stringfystring.replace(/\\&quot;/g, &#x27;&quot;&#x27;)</span><br><span class="line">    paramstring = JSON.parse(stringfystring)</span><br><span class="line">    tens = `&#123;&quot;action&quot;:` + actionName + `,&quot;param&quot;:&#123;&#125;&#125;`</span><br><span class="line">    tjson = JSON.parse(tens)</span><br><span class="line">    tjson.param = paramstring</span><br><span class="line">    return tjson</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后再输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var demo = new Hlclient(&quot;ws://127.0.0.1:12080/ws?group=zzz&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>其中变量名demo, 和group的值可以自己定</strong></p>
+<h5 id="2-记录加密函数"><a href="#2-记录加密函数" class="headerlink" title="2. 记录加密函数"></a>2. 记录加密函数</h5><p>首先还是调试到加密那一步</p>
+<p><img src="/posts/7297c4f4/20240523234406-4994dc34-191b-1.png" alt="img"></p>
+<p>这里我们就知道了, 加密函数为<code>l()</code></p>
+<p>在控制台中输入<code>window.enc = l</code>, 控制台会显示当前函数信息, 并保存非形参的参数, <strong>注册成功后我们可以主动调用<code>enc()</code>函数, 查看是否有效</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">window.enc() = l</span><br><span class="line"></span><br><span class="line">#测试</span><br><span class="line">enc(&quot;123&quot;)</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-向JsRPC中注册这些函数"><a href="#3-向JsRPC中注册这些函数" class="headerlink" title="3. 向JsRPC中注册这些函数"></a>3. 向JsRPC中注册这些函数</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#有参</span><br><span class="line">demo.regAction(&quot;enc&quot;, function (resolve, param) &#123;</span><br><span class="line">    var res = enc(String(param));</span><br><span class="line">    resolve(res);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong><img src="/posts/7297c4f4/20240523234450-64382154-191b-1.png" alt="img"></strong></p>
+<h5 id="4-测试调用"><a href="#4-测试调用" class="headerlink" title="4. 测试调用"></a>4. 测试调用</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:12080/go?group=zzz&amp;action=enc&amp;param=123</span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/7297c4f4/20240523234506-6d59d890-191b-1.png" alt="img"></p>
+<p>懂得原理后, 我们可以继续进行操作了</p>
+<h4 id="JS-RPC-MITM"><a href="#JS-RPC-MITM" class="headerlink" title="JS-RPC + MITM"></a>JS-RPC + MITM</h4><p> 目前比较流行的一个解决方案, <strong>通过 mitm 将原始请求发送到JS-RPC中进行加密后修改原始数据包内容</strong>, 再进行发包</p>
+<p><strong>mitmproxy</strong> 为一款代理工具, 你可以把他理解为<strong>python版的burpsuite</strong>, 可以进行拦截,改包等操作, 所以我们的思路是这样:</p>
+<p><img src="/posts/7297c4f4/20240523234529-7b1d3a76-191b-1.png" alt="img"></p>
+<p>接下来就到实际应用的阶段了：</p>
+<p> 针对目前的靶场, 我们需要分析一下JS的代码。</p>
+<p><img src="/posts/7297c4f4/20240523234545-84e6cfea-191b-1.png" alt="img"></p>
+<p>几个关键的变量和函数：</p>
+<ul>
+<li>r： <strong>很明显就是时间戳。</strong></li>
+<li>n： 原始的表单数据请求经过v() 函数处理后， 再进行JSON编码。</li>
+<li>i： 使用p函数生成的requestId。</li>
+<li>s： 使用<strong>MD5()函数生成的哈希值</strong>， 生成的方式为n+i+r的字符串拼接。</li>
+<li>加密： <strong>对变量n使用l()函数进行加密。</strong></li>
+</ul>
+<p>针对实际请求包的修改：</p>
+<p>我们需要在请求头中<strong>添加 timestamp，requestId, sign 等字段</strong>。</p>
+<p>然后<strong>修改明文请求体进行加密。</strong></p>
+<p>接下来就是实现：</p>
+<h5 id="1-启动JS-rpc-并注入代码"><a href="#1-启动JS-rpc-并注入代码" class="headerlink" title="1. 启动JS-rpc, 并注入代码"></a>1. 启动JS-rpc, 并注入代码</h5><p><img src="/posts/7297c4f4/20240523234604-906e2610-191b-1.png" alt="img"></p>
+<h5 id="2-打上断点并调试-记录函数-并注册"><a href="#2-打上断点并调试-记录函数-并注册" class="headerlink" title="2. 打上断点并调试, 记录函数, 并注册"></a>2. 打上断点并调试, 记录函数, 并注册</h5><p><strong>记录</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//时间戳</span><br><span class="line">window.time = Date.parse</span><br><span class="line">//requestId</span><br><span class="line">window.id = p</span><br><span class="line">//v函数</span><br><span class="line">window.v1 = v</span><br><span class="line">//签名</span><br><span class="line">window.m = a.a.MD5</span><br><span class="line">//加密</span><br><span class="line">window.enc = l</span><br></pre></td></tr></table></figure>
+
+<p><strong>注册</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//md5函数</span><br><span class="line">demo.regAction(&quot;req&quot;, function (resolve,param) &#123;</span><br><span class="line">    //请求头</span><br><span class="line">    let timestamp = time(new Date());</span><br><span class="line">    let requestid = id();</span><br><span class="line">    let v_data = JSON.stringify(v1(param));</span><br><span class="line">    let sign = m(v_data + requestid + timestamp).toString();</span><br><span class="line">    //加密请求体</span><br><span class="line">    let encstr = enc(v_data);</span><br><span class="line"></span><br><span class="line">    let res = &#123;</span><br><span class="line">        &quot;timestamp&quot;:timestamp,</span><br><span class="line">        &quot;requestid&quot;:requestid,</span><br><span class="line">        &quot;encstr&quot;:encstr,</span><br><span class="line">        &quot;sign&quot;:sign</span><br><span class="line">    &#125;;</span><br><span class="line">    resolve(res);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<p><img src="/posts/7297c4f4/20240523234629-9f17ec50-191b-1.png" alt="img"></p>
+<p>这样我们就可以一次性获取所有请求的需求了</p>
+<h5 id="3-构建MITM"><a href="#3-构建MITM" class="headerlink" title="3. 构建MITM"></a>3. 构建MITM</h5><p> 之前介绍过Mitmproxy , 就是python版的burpsuite, 所以我们只需要知道核心的代码逻辑: 即提取原始请求体后, 向请求头中<strong>添加requestId, timestamp, sign字段 并且 替换原始请求体为加密后的内容</strong>就OK了, 直接Chatgpt生成</p>
+<p><strong>其实本质也就是本地搓+远程注册 然后应对加签也有对应的处理方案</strong></p>
+<p> 代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line">import time</span><br><span class="line">import hashlib</span><br><span class="line">import uuid</span><br><span class="line">from mitmproxy import http</span><br><span class="line">import requests</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def request(flow: http.HTTPFlow) -&gt; None:</span><br><span class="line">    if flow.request.pretty_url.startswith(&quot;http://39.98.108.20:8085/api/&quot;):</span><br><span class="line">        # 提取原始请求体</span><br><span class="line">        original_body = flow.request.content.decode(&#x27;utf-8&#x27;)</span><br><span class="line">        data = &#123;&quot;group&quot;: &quot;zzz&quot;, &quot;action&quot;: &quot;req&quot;, &quot;param&quot;: original_body&#125;</span><br><span class="line">        res = requests.post(&quot;http://127.0.0.1:12080/go&quot;,data=data)</span><br><span class="line">        res_json = json.loads(res.text)[&quot;data&quot;]</span><br><span class="line">        data_json = json.loads(res_json)</span><br><span class="line">        print(data_json)</span><br><span class="line">        # 对请求体进行加密处理（这里假设加密方法是简单的哈希）</span><br><span class="line">        encrypted_body = data_json[&quot;encstr&quot;]</span><br><span class="line"></span><br><span class="line">        # 替换请求体</span><br><span class="line">        flow.request.text = encrypted_body</span><br><span class="line"></span><br><span class="line">        # 生成 requestId，sign 和 timestamp</span><br><span class="line">        request_id = data_json[&quot;requestid&quot;]</span><br><span class="line">        timestamp = data_json[&quot;timestamp&quot;]</span><br><span class="line">        sign = data_json[&quot;sign&quot;]</span><br><span class="line"></span><br><span class="line">        # 添加或替换请求头</span><br><span class="line">        flow.request.headers[&quot;requestId&quot;] = request_id</span><br><span class="line">        flow.request.headers[&quot;timestamp&quot;] = str(timestamp)</span><br><span class="line">        flow.request.headers[&quot;sign&quot;] = sign</span><br><span class="line"></span><br><span class="line"># 运行 mitmproxy 时加载这个脚本：mitmproxy -s your_script.py</span><br><span class="line">例:</span><br><span class="line">mitmproxy -p 8083 -s mitm.py</span><br></pre></td></tr></table></figure>
+
+<p>将代码运行起来后, <strong>burpsuite 的upstream 设为 mitm的监听端口</strong></p>
+<p><img src="/posts/7297c4f4/20240523234654-ae1f1c0a-191b-1.png" alt="img"></p>
+<h5 id="4-测试"><a href="#4-测试" class="headerlink" title="4. 测试"></a>4. 测试</h5><p>在burpsuite中发送明文数据包, 在经过mitm处理后, 自动加密, 此时服务端再不会报错了</p>
+<p><img src="/posts/7297c4f4/20240523234739-c90691c4-191b-1.png" alt="img"></p>
+<h4 id="JS-RPC-YAKIT-热加载"><a href="#JS-RPC-YAKIT-热加载" class="headerlink" title="JS-RPC + YAKIT 热加载"></a>JS-RPC + YAKIT 热加载</h4><p> 在刚刚的例子里面, 我们虽然可以实现加解密, 但是毕竟数据包拐了山路十八弯, 难免优点麻烦。 有没有少拐点弯的方法呢？ 当然有啦， <strong>yakit</strong>作为国内优秀的渗透一体化工具，现在的在渗透中的使用率越来越高，相信随着国产化的普及，以后会更加流行。 还不会使用yakit的同学真的可以好好学习一下， 有的功能挺好用的。 在yakit中有一个模块叫做“<strong>web fuzzer</strong>“，有点像burpsuite中 repeater 和 intruder的结合体， 提供了数据包的重放和fuzz功能。</p>
+<h5 id="热加载"><a href="#热加载" class="headerlink" title="热加载"></a>热加载</h5><p> 通过web fuzzer<strong>自带热加载功能</strong>， 通过官方对热加载的描述， 我们可以<strong>构建一段代码，在发送后自动加密</strong>， 这样就省去mitm的使用了。</p>
+<p><img src="/posts/7297c4f4/20240523235959-821b9b68-191d-1.png" alt="img"></p>
+<p><strong>热加载中自带了两个魔术方法， 分别对请求和响应自动做处理</strong></p>
+<p><img src="/posts/7297c4f4/20240523234838-ec2cf724-191b-1.png" alt="img"></p>
+<h5 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h5><p>通过研究， 可以详细解释解释：</p>
+<p>请求包处理： 实现beforeRequest..方法即可， 其中行参”req“为一个字节数组， 保存了完整的请求内容字节。</p>
+<p>那么我们通过yak官方的poc库（实际就是HTTP库），提供的方法，可以做如下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//获取请求体</span><br><span class="line">requestBody = poc.GetHTTPPacketBody(req)</span><br><span class="line">//修改请求包中指定的请求头</span><br><span class="line">req = poc.ReplaceHTTPPacketHeader(req, &quot;请求头名&quot;, &quot;请求头值&quot;)</span><br><span class="line">//修改请求体</span><br><span class="line">req = poc.ReplaceHTTPPacketBody(req, &quot;修改后的值&quot;)</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-实现"><a href="#2-实现" class="headerlink" title="2. 实现"></a>2. 实现</h5><p>首先我们需要准备好, 解密后的请求体, 可以直接把之前提到的变量n的值拿过来</p>
+<p><img src="/posts/7297c4f4/20240523235838-51b9daca-191d-1.png" alt="img"></p>
+<p>完整热加载内容（<strong>JsRPC沿用上面的内容</strong>）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">// 定义加密函数</span><br><span class="line">func getEnc(data)&#123;</span><br><span class="line">    rsp,rep,err = poc.Post(&quot;http://127.0.0.1:12080/go&quot;,poc.replaceBody(&quot;group=zzz&amp;action=req&amp;param=&quot;+data, false),poc.appendHeader(&quot;content-type&quot;, &quot;application/x-www-form-urlencoded&quot;))</span><br><span class="line">    if(err)&#123;</span><br><span class="line">        return(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return json.loads(rsp.GetBody())[&quot;data&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// beforeRequest 允许发送数据包前再做一次处理，定义为 func(origin []byte) []byte</span><br><span class="line">beforeRequest = func(req) &#123;</span><br><span class="line">    //获取请求体</span><br><span class="line">    req_body = poc.GetHTTPPacketBody(req)</span><br><span class="line">    //加密</span><br><span class="line">    res = getEnc(string(req_body))</span><br><span class="line">    //获取其他的参数</span><br><span class="line">    res = json.loads(res)</span><br><span class="line"></span><br><span class="line">    //修改其他的请求头</span><br><span class="line">    req = poc.ReplaceHTTPPacketHeader(req, &quot;requestId&quot;, res[&quot;requestid&quot;])</span><br><span class="line">    req = poc.ReplaceHTTPPacketHeader(req, &quot;timestamp&quot;, res[&quot;timestamp&quot;])</span><br><span class="line">    req = poc.ReplaceHTTPPacketHeader(req, &quot;sign&quot;, res[&quot;sign&quot;])</span><br><span class="line"></span><br><span class="line">    //修改请求体</span><br><span class="line">    req = poc.ReplaceHTTPPacketBody(req, res[&quot;encstr&quot;])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    return []byte(req)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// afterRequest 允许对每一个请求的响应做处理，定义为 func(origin []byte) []byte</span><br><span class="line">afterRequest = func(rsp) &#123;</span><br><span class="line">    return []byte(rsp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// mirrorHTTPFlow 允许对每一个请求的响应做处理，定义为 func(req []byte, rsp []byte, params map[string]any) map[string]any</span><br><span class="line">// 返回值回作为下一个请求的参数，或者提取的数据，如果你需要解密响应内容，在这里操作是最合适的</span><br><span class="line">mirrorHTTPFlow = func(req, rsp, params) &#123;</span><br><span class="line">    return params</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后通过fuzz功能测试暴力破解，爆破成功</p>
+<p><img src="/posts/7297c4f4/20240523234900-f939593a-191b-1.png" alt="img"></p>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.sudo.online/posts/7297c4f4/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.sudo.online/posts/7297c4f4/&title=JS对抗与逆向_实战篇 - Satoru's Blog&summary=针对JS加解密痛点对抗笔记"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=JS对抗与逆向_实战篇 - Satoru's Blog&amp;body=https://blog.sudo.online/posts/7297c4f4/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.sudo.online/posts/7297c4f4/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/bb65c661/">身份隐藏_无痕系列(3)</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/a27ef720/">身份隐藏_无痕系列(2)</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body beaudar'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="beaudar" repo="sat0ru-qwq/blog-comment" issue-term="pathname" theme="preferred-color-scheme" input-position="top" comment-order="desc" loading="true" branch="main"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">Satoru</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E8%B4%A8"><span class="toc-text">本质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS%E9%80%86%E5%90%91"><span class="toc-text">JS逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#v-jstools"><span class="toc-text">v_jstools</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A5%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90%E4%BD%BF%E7%94%A8%E4%B8%8E%E6%91%B8%E7%B4%A2"><span class="toc-text">以简单的例子使用与摸索</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E6%90%9C%E7%B4%A2%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-text">1. 为什么不用搜索的方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E6%98%8E%E6%96%87%E7%82%B9"><span class="toc-text">2. 明文点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E5%8C%85%E6%89%8B%E6%B3%95"><span class="toc-text">改包手法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="toc-text">修改当前数据包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%BF%AE%E6%94%B9%E6%B3%95"><span class="toc-text">作用域修改法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JS-forward"><span class="toc-text">JS-forward</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E5%8F%91%E5%8C%85%E7%9A%84%E5%8A%A0%E5%AF%86%E4%B8%8E%E8%A7%A3%E5%AF%86"><span class="toc-text">主动发包的加密与解密</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JS-RPC"><span class="toc-text">JS-RPC</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%85%88%E6%89%93%E5%BC%80%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%93%E5%BC%80%E6%8E%A7%E5%88%B6%E5%8F%B0%EF%BC%8C%E5%B0%86JSrpc%E7%9A%84%E6%B3%A8%E5%85%A5%E4%BB%A3%E7%A0%81%E8%BE%93%E5%85%A5"><span class="toc-text">1. 先打开客户端，然后打开控制台，将JSrpc的注入代码输入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E8%AE%B0%E5%BD%95%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0"><span class="toc-text">2. 记录加密函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E5%90%91JsRPC%E4%B8%AD%E6%B3%A8%E5%86%8C%E8%BF%99%E4%BA%9B%E5%87%BD%E6%95%B0"><span class="toc-text">3. 向JsRPC中注册这些函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E6%B5%8B%E8%AF%95%E8%B0%83%E7%94%A8"><span class="toc-text">4. 测试调用</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JS-RPC-MITM"><span class="toc-text">JS-RPC + MITM</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%90%AF%E5%8A%A8JS-rpc-%E5%B9%B6%E6%B3%A8%E5%85%A5%E4%BB%A3%E7%A0%81"><span class="toc-text">1. 启动JS-rpc, 并注入代码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E6%89%93%E4%B8%8A%E6%96%AD%E7%82%B9%E5%B9%B6%E8%B0%83%E8%AF%95-%E8%AE%B0%E5%BD%95%E5%87%BD%E6%95%B0-%E5%B9%B6%E6%B3%A8%E5%86%8C"><span class="toc-text">2. 打上断点并调试, 记录函数, 并注册</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E6%9E%84%E5%BB%BAMITM"><span class="toc-text">3. 构建MITM</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E6%B5%8B%E8%AF%95"><span class="toc-text">4. 测试</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JS-RPC-YAKIT-%E7%83%AD%E5%8A%A0%E8%BD%BD"><span class="toc-text">JS-RPC + YAKIT 热加载</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%83%AD%E5%8A%A0%E8%BD%BD"><span class="toc-text">热加载</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%8E%9F%E7%90%86"><span class="toc-text">1. 原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E5%AE%9E%E7%8E%B0"><span class="toc-text">2. 实现</span></a></li></ol></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #beaudar');
+  util.viewportLazyload(el, load_beaudar, false);
+
+  function load_beaudar() {
+    if (!el) return;
+    try {
+      el.innerHTML = '';
+    } catch (error) {
+      console.error(error);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://beaudar.lipk.org/client.js';
+    script.async = true;
+    for (const key of Object.keys(el.attributes)) {
+      const attr = el.attributes[key];
+      if (['class', 'id'].includes(attr.name) === false) {
+        script.setAttribute(attr.name, attr.value);
+      }
+    }
+    el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.min.css" media="all">
+
+
+
+<!-- inject -->
+
+</div></body></html>

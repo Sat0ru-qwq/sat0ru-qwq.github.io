@@ -1,0 +1,1073 @@
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>身份隐藏_无痕系列(3) - Satoru's Blog</title>
+
+  
+    <meta name="description" content="以APT趋势作为导引,发掘一线作战新思路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="身份隐藏_无痕系列(3)">
+<meta property="og:url" content="https://blog.sudo.online/posts/bb65c661/">
+<meta property="og:site_name" content="Satoru&#39;s Blog">
+<meta property="og:description" content="以APT趋势作为导引,发掘一线作战新思路">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.sudo.online/img/avatar.jpg">
+<meta property="article:published_time" content="2025-09-05T12:47:43.000Z">
+<meta property="article:modified_time" content="2025-12-13T06:44:32.785Z">
+<meta property="article:author" content="Satoru">
+<meta property="article:tag" content="APT">
+<meta property="article:tag" content="身份隐藏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sudo.online/img/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="APT,身份隐藏">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Satoru's Blog" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/img/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg"},"dateCreated":"2025-09-05T20:47:43+08:00","dateModified":"2025-12-13T14:44:32+08:00","datePublished":"2025-09-05T20:47:43+08:00","description":"","headline":"身份隐藏_无痕系列(3)","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.sudo.online/posts/bb65c661/"},"publisher":{"@type":"Organization","name":"Satoru","sameAs":[],"image":"/img/avatar.jpg","logo":{"@type":"ImageObject","url":"/img/avatar.jpg"}},"url":"https://blog.sudo.online/posts/bb65c661/","keywords":"APT, 身份隐藏","image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/img/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">Satoru's Blog</div><div class="sub cap">Learning Cyber Security...</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M3.464 20.536C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535" opacity="0.5"/><path fill="currentColor" d="M9.5 8.75A3.25 3.25 0 1 0 12.75 12a.75.75 0 0 1 1.5 0A4.75 4.75 0 1 1 9.5 7.25a.75.75 0 0 1 0 1.5"/><path fill="currentColor" d="M17.75 12a3.25 3.25 0 0 1-3.25 3.25a.75.75 0 0 0 0 1.5A4.75 4.75 0 1 0 9.75 12a.75.75 0 0 0 1.5 0a3.25 3.25 0 0 1 6.5 0"/></svg></a><a class="nav-item" title="关于" href="/about/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">无限进步<<<</span></div><div class="widget-body fs14"><p>银鞍照白马，飒沓如流星</p>
+</div></widget>
+
+<widget class="widget-wrapper linklist"><div class="widget-body fs14">
+<div class="linklist left" style="grid-template-columns:repeat(1,1fr);">
+<a class="link" title="渗透测试" href="/categories/penetration"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M14 21.71A7 7 0 0 1 5 15v-3.062A3.94 3.94 0 0 1 8.938 8h6.124A3.94 3.94 0 0 1 19 11.938V15a6.98 6.98 0 0 1-2 4.899"/><path fill="currentColor" d="M8.25 7.5a.75.75 0 0 0-1.5 0zm-.615-2.917a.75.75 0 1 0 1.246.834zM17.25 8.5v-1h-1.5v1zm-10.5-1v1h1.5v-1zm10.5 0c0-2.9-2.35-5.25-5.25-5.25v1.5a3.75 3.75 0 0 1 3.75 3.75zM12 2.25a5.25 5.25 0 0 0-4.365 2.333l1.246.834A3.75 3.75 0 0 1 12 3.75z"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15"/></g></svg><span>渗透测试</span></div></a>
+<a class="link" title="代码审计" href="/categories/code-audit"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="m17 7.83l1.697 1.526c1.542 1.389 2.313 2.083 2.313 2.974c0 .89-.771 1.585-2.314 2.973L17 16.83"/><path d="m13.987 5l-3.974 14.83" opacity="0.5"/><path d="M7 7.83L5.304 9.356C3.76 10.745 2.99 11.44 2.99 12.33s.771 1.585 2.314 2.973L7 16.83"/></g></svg><span>代码审计</span></div></a>
+<a class="link" title="安全研究" href="/categories/research"><div class="flex"><?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 16C44 22.6274 38.6274 28 32 28C29.9733 28 28.0639 27.4975 26.3896 26.6104L9 44L4 39L21.3896 21.6104C20.5025 19.9361 20 18.0267 20 16C20 9.37258 25.3726 4 32 4C34.0267 4 35.9361 4.50245 37.6104 5.38959L30 13L35 18L42.6104 10.3896C43.4975 12.0639 44 13.9733 44 16Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>安全研究</span></div></a></div></div></widget>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/a27ef720/"><span class="title">身份隐藏_无痕系列(2)</span></a><a class="item title" href="/posts/bb65c661/"><span class="title">身份隐藏_无痕系列(3)</span></a><a class="item title" href="/posts/877fc705/"><span class="title">身份隐藏_无痕系列(1)</span></a><a class="item title" href="/posts/afb5c91c/"><span class="title">一些时报</span></a><a class="item title" href="/posts/c6650469/"><span class="title">仅仅拿下了域控？</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/sat0ru-qwq" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="mailto:s4t0ru@qq.com" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/research/">research</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-05T12:47:43.000Z">2025-09-05</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-12-13T06:44:32.785Z">2025-12-13</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>身份隐藏_无痕系列(3)</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="APT态势与威胁情报系列"><a href="#APT态势与威胁情报系列" class="headerlink" title="APT态势与威胁情报系列"></a>APT态势与威胁情报系列</h1><p>之前刷公众号看到名为<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-DOHQQq9mCw62_snTD9xOQ?scene=1&click_id=2">APT研究顶级会议</a>的推文，被”保持好奇，永不停止学习”的精神深深打动，于是想要跟随前辈们的脚步，做一个系列，来一场纯粹的探索。</p>
+<p>在我看来，APT 的核心不在于高阶的战术，而是隐藏。身份、流量、痕迹，层层伪装，长期潜伏**。这个系列的目标，就是把公开报告里这些“身份隐藏”的技法拆开，留下冷静的记录，让红队从中学会藏身，蓝队于此着手识别**</p>
+<p>既要推荐“强调身份隐藏”的 APT 报告，又要有实战味。不打磨，不粉饰，直指“大隐隐于市”式的真实干货。下面是几份非常契合这类风格、强调“身份隐藏”的 APT 报告推荐，我将援引以下报告中涉及的事件作为本系列前几话的研究重点</p>
+<p><strong><a target="_blank" rel="noopener" href="https://securelist.com/apt-trends-report-q2-2024/113275/">Kaspersky — “Q2 2024 APT 趋势报告”</a></strong></p>
+<p><a target="_blank" rel="noopener" href="https://securelist.com/an-overview-of-targeted-attacks-and-apts-on-linux/98440/"><strong>Kaspersky — “Linux 平台 APT 攻击概览”</strong></a></p>
+<p>尽管这些事件在如今看来是比较陈旧的素材，但其构造攻击链条思路的精巧与所谓骗术的优雅,值得在当下蓝队安全体系逐渐完善的”攻防不对等”大情景下给予红队人员更深化的思考</p>
+<h1 id="XZ-后门事件"><a href="#XZ-后门事件" class="headerlink" title="XZ 后门事件"></a>XZ 后门事件</h1><hr>
+<p><strong>聚焦 liblzma backdoor 部分，感受供应链攻击如何做到“隐形入侵 + ”。</strong></p>
+<p><img src="/posts/bb65c661/3bec03dbccac64e053b47158e129fddc.jpg" alt="供应链攻击成最大网络威胁，解决之道关键在人- 安全内参| 决策者的网络安全知识库"></p>
+<h3 id="攻击背景"><a href="#攻击背景" class="headerlink" title="攻击背景"></a>攻击背景</h3><ul>
+<li><strong>时间点</strong>：2024 年 3 月。</li>
+<li><strong>目标组件</strong>：XZ Utils 压缩库（liblzma），被广泛集成在主流 Linux 发行版中。</li>
+<li><strong>利用链条</strong>：因为 <code>liblzma</code> 被 OpenSSH 的 <code>sshd</code> 间接依赖，所以一旦构建过程被污染，就能在 <code>sshd</code> 进程中触发恶意逻辑。</li>
+</ul>
+<h3 id="攻击手法（身份隐藏-供应链渗透）"><a href="#攻击手法（身份隐藏-供应链渗透）" class="headerlink" title="攻击手法（身份隐藏 + 供应链渗透）"></a>攻击手法（身份隐藏 + 供应链渗透）</h3><ol>
+<li><p><strong>长期社工 + 社区潜伏</strong></p>
+<ul>
+<li><p>攻击者以“陈嘉昌”身份混入开源社区，参与开发讨论，伪造贡献记录。</p>
+</li>
+<li><p>在公开场合反复互动，建立“可信开发者”形象。</p>
+</li>
+</ul>
+<p><img src="/posts/bb65c661/1757086555_68bb035b41a1b2e235afe.jpeg" alt="1757086555_68bb035b41a1b2e235afe.png!small?1757086556478"></p>
+</li>
+<li><hr>
+<p><strong>操控构建过程</strong></p>
+<ul>
+<li>恶意代码不是直接写进主分支，而是巧妙地放在测试&#x2F;构建辅助脚本中。</li>
+<li>通过复杂的压缩脚本链条，最终影响到 <code>liblzma</code>，再间接作用于 <code>sshd</code>。</li>
+</ul>
+</li>
+<li><p><strong>后门特性</strong></p>
+<ul>
+<li>在 <code>sshd</code> 进程中植入潜在的远程代码执行能力。</li>
+<li>隐蔽度极高，普通代码审计几乎难以发现，直到二进制行为异常才被揭露。</li>
+</ul>
+</li>
+</ol>
+<p>这是供应链攻击的顶级案例，不仅是技术层面，更是 <strong>身份隐藏+社工渗透+长期潜伏</strong> <strong>的完美结合。</strong></p>
+<h4 id="事件时间线"><a href="#事件时间线" class="headerlink" title="事件时间线"></a>事件时间线</h4><p>2024.01.19 XZ 网站被新维护者 （<a target="_blank" rel="noopener" href="https://github.com/JiaT75">jiaT75</a>） 移至 GitHub 页面<br>2024.02.15 .gitignore 中<a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=4323bc3e0c1e1d2037d5e670a3bf6633e8a3031e">新增 </a>“build-to-host.m4”<br>2024.02.23 <a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commit;h=cf44e4b7f5dfdbf8c78aef377c10f71e274f63c0">引入</a>两个包含恶意脚本阶段的“测试文件”<br>2024.02.24 XZ 5.6.0 发布<br>2024.02.26 <a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=328c52da8a2bbb81307644efdb58db2c422d9ba7">CMakeLists.txt 提交破坏 </a><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man7/landlock.7.html">Landlock</a> 安全功能的内容<br>2024.03.04 后门导致 Valgrind <a target="_blank" rel="noopener" href="https://bugzilla.redhat.com/show_bug.cgi?id=2267598">出现问题</a><br>2024.03.09 更新两个“测试文件”，修改 CRC 功能，修复 Valgrind 问题<br>2024.03.09 XZ 5.6.1 发布<br>2024.03.28 发现错误，Debian 和 RedHat 通知<br>2024.03.28 Debian 将 XZ 5.6.1 回<a target="_blank" rel="noopener" href="https://tracker.debian.org/news/1515519/accepted-xz-utils-561really545-1-source-into-unstable/">滚</a>至 5.4.5-0.2 版本<br>2024.03.29 OSS-security 邮件<a target="_blank" rel="noopener" href="https://www.openwall.com/lists/oss-security/2024/03/29/4">列表发布邮件</a><br>2024.03.29 RedHat 确认后门 XZ 已在 Fedora Rawhide 和 Fedora Linux 40 beta 中<a target="_blank" rel="noopener" href="https://www.redhat.com/en/blog/urgent-security-alert-fedora-41-and-rawhide-users">发布</a><br>2024.03.30 Debian <a target="_blank" rel="noopener" href="https://fulda.social/@Ganneff/112184975950858403">关闭</a>构建并启动重建进程<br>2024.04.02 XZ 主开发商<a target="_blank" rel="noopener" href="https://tukaani.org/xz-backdoor/">认同</a>后门事件</p>
+<p>更详细的xz <a target="_blank" rel="noopener" href="https://research.swtch.com/xz-timeline">开源攻击时间线</a></p>
+<p><img src="/posts/bb65c661/image-20250905191403801.png" alt="image-20250905191403801"></p>
+<h4 id="核心1——长期社工-社区潜伏"><a href="#核心1——长期社工-社区潜伏" class="headerlink" title="核心1——长期社工 + 社区潜伏"></a>核心1——长期社工 + 社区潜伏</h4><p>众所周知，在长期攻防的发展中，<strong>钓鱼&#x2F;近源</strong>攻击在突破外点的工作中起到了越来越重要的作用。为什么？很简单的道理，<strong>防御思维的盲点 是 红队机会</strong></p>
+<p>防御方热衷搞静态分析、模糊测试，偏执于“技术检测”,但对开源技术社区所谓的<strong>社区文化、人力缺口、社交信任</strong>几乎没有防护机制。xz后门事件便成为了血淋淋的例子**，高级的攻击者不和防御机制玩所谓的”签名对抗”，而是接触开源文化，玩信任经济，在社会工程学上不断赢得防御方的正反馈，逐步化身为可信用户植入后门。**下面就讲讲JiaTan的潜伏大戏</p>
+<p><img src="/posts/bb65c661/image-20250905202706841.png" alt="image-20250905202706841"></p>
+<h5 id="2021"><a href="#2021" class="headerlink" title="2021"></a><strong>2021</strong></h5><p>JiaT75（Jia Tan）创建了他们的 GitHub 帐户并打开了一个PR用于修改警告功能中的文本提示，同时利用不安全的变体替换了<em>safe_print</em>，同时<strong>这份代码在没有任何讨论的情况下就被合并了。</strong></p>
+<h5 id="2022"><a href="#2022" class="headerlink" title="2022"></a>2022</h5><p>2022年4月，Jia Tan通过邮件列表提交了补丁,同时出现了一个新角色——<strong>吉加尔·库马尔</strong> ，他向开源社区<strong>施压并不断<a target="_blank" rel="noopener" href="https://www.mail-archive.com/xz-devel@tukaani.org/msg00565.html">要求为xz添加另一个维护者</a></strong></p>
+<p>在<strong>向 <em>Lasse Collin</em> 施压添加另一名维护者的电子邮件三天后，JiaT75 首次提交PR给 xz</strong>：<a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=aa75c5563a760aea3aa23d997d519e702e82726b"> 测试：为硬件功能创建了测试。</a> 自从这次提交以来，<strong>他们正式成为 xz 的定期贡献者</strong></p>
+<p>另一个帐户——<a target="_blank" rel="noopener" href="https://www.mail-archive.com/search?l=xz-devel@tukaani.org&q=from:%22Dennis+Ens%22"> 丹尼斯·恩斯 （Dennis Ens）</a> 也参与了<strong>施压</strong>，要求**维护者给出XZ for C的维护权。**电子邮件格式相似，姓名+数字格式相似。<strong>这个帐户也从未在 xz 讨论之外出现过，也没有发现任何相关的帐户。</strong></p>
+<p><img src="/posts/bb65c661/image-20250905210554207.png" alt="image-20250905210554207"></p>
+<p>从这些账户特征作为分析的出发点，就可以从中发掘出这极可能是<strong>一场有组织性的开源文化心理压迫</strong>，通过<strong>多个账户向维护者施压并提升关键用户的可信度，并逼迫维护者让权</strong></p>
+<p>本质上就是典型的 <em>astroturfing</em>（人造舆论场）。多个账号协调一致，不断提出“增加维护者&#x2F;交出权限”的要求。邮件往复堆叠，给单一维护者（Lasse Collin）营造持续的心理压力。</p>
+<p><img src="/posts/bb65c661/image-20250905211907001.png" alt="image-20250905211907001"></p>
+<p>利用维护者<strong>精力有限+孤立无援</strong>的状态，通过群体施压逼迫让权。</p>
+<h5 id="2023"><a href="#2023" class="headerlink" title="2023"></a>2023</h5><p>JiaT75 <a target="_blank" rel="noopener" href="https://github.com/tukaani-project/xz/pull/7">于 2023 年 1 月 7 日</a>合并了他们的第一次提交，从这天起，他正式进入“可信开发者”行列，具备了在仓库里直接推动变更的能力。</p>
+<p>3 月，Google oss-fuzz 中的主要联系电子邮件<a target="_blank" rel="noopener" href="https://github.com/JiaT75/oss-fuzz/commit/6403e93344476972e908ce17e8244f5c2b957dfd">更新为 </a> JiaTan 的，而不是 <em>Lasse Collin</em>。这标明着<strong>JiaTan正式谋权成为了官方维护者之一，项目安全测试的第一手沟通渠道也被转移到JiaTan者手上。</strong></p>
+<p>同时 对应本次供应链的漏洞关键代码也成功落地，<strong>虽然 <em>Lasse Collin</em> 被认为是该漏洞的作者，但 <em>Jia Tan</em> 也参与了该漏洞的开发，该漏洞最初由 <em>Hans Jansen</em> 于 6 月份编写：</strong></p>
+<ul>
+<li>Commit: <a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=ee44863ae88e377a5df10db007ba9bfadde3d314">liblzma: Add ifunc implementation to crc64_fast.c</a></li>
+<li>PR: <a target="_blank" rel="noopener" href="https://github.com/tukaani-project/xz/pull/53">Replaced crc64_fast constructor with ifunc by hansjans162</a></li>
+</ul>
+<p>也就是**&#x2F;&#x2F;Hans 写代码 → Jia 推提交 → 署名套到 Lasse。&#x2F;&#x2F;**</p>
+<p><strong>事实证明，黑客可以为了你左右脑互博</strong></p>
+<p><img src="/posts/bb65c661/image-20250905214905134.png" alt="image-20250905214905134"></p>
+<p>对应的,在这里的<strong>Author署名被套到了Lasse</strong></p>
+<p><img src="/posts/bb65c661/image-20250905215039275.png" alt="image-20250905215039275"></p>
+<p>HansJansen的账户在此前后几乎没有任何账户活动，只是<strong>为了将危险代码落地到XZ的官方代码中</strong></p>
+<p>有人生成</p>
+<h5 id="2024"><a href="#2024" class="headerlink" title="2024"></a>2024</h5><p>一个针对 Google <a target="_blank" rel="noopener" href="https://github.com/google/oss-fuzz/pull/11587">oss-fuzz 的拉取请求 </a>，把项目 URL 从 <code>tukaani.org/xz/</code> 改成 <code>xz.tukaani.org/xz-utils/</code>。看似是个普通的“项目路径调整”。</p>
+<p>原始域名 <code>tukaani.org</code> 在芬兰的一个主机商上托管，是 Lasse Collin 掌控的基础设施。</p>
+<p>新增的 <code>xz.tukaani.org</code> 子域却指向 <strong>GitHub Pages</strong>，控制权转移到了攻击者能操作的范围。</p>
+<p><strong>结果</strong>：项目外部的官方入口逐步被 Jia 掌控。</p>
+<p>包含执行此后门所需的<strong>最后步骤也被添加到存储库：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=cf44e4b7f5dfdbf8c78aef377c10f71e274f63c0">Tests: Add a few test files</a></li>
+<li><a target="_blank" rel="noopener" href="https://git.tukaani.org/?p=xz.git;a=commitdiff;h=6e636819e8f070330d835fce46289a3ff72a7b89">Tests: Update two test files</a></li>
+</ul>
+<p>后续则是被某个安全研究员发现对应 liblzma模块占用了大量CPU时间，导致了延迟，因此深入的探究并发现了<strong>该漏洞利用链</strong></p>
+<p><img src="/posts/bb65c661/image-20250905221353680.png" alt="image-20250905221353680"></p>
+<h4 id="核心2-——操作构建过程"><a href="#核心2-——操作构建过程" class="headerlink" title="核心2 ——操作构建过程"></a>核心2 ——操作构建过程</h4><p>植入后门的引导程序，是Jia Tan在2024年,也就是潜伏最后阶段提交的两个测试文件[<strong>bad-3-corrupt_lzma2.xz</strong>,<strong>good-large_compressed.lzma</strong>]，这些文件看似无害，但实际上<strong>攻击者可以在需要时提取隐藏在错误数据中的shell脚本与后门。</strong></p>
+<p><img src="/posts/bb65c661/image-20250905222731787.png" alt="image-20250905222731787"></p>
+<p>这一段已经是 <strong>XZ backdoor 的“武器化阶段”</strong>，之前几个月都是打地基、养身份、铺环境，现在是真正让后门能跑起来了</p>
+<h5 id="1-控制分发入口"><a href="#1-控制分发入口" class="headerlink" title="1. 控制分发入口"></a>1. 控制分发入口</h5><ul>
+<li><strong>Github Releases</strong>：表面上发的是正常源码，里面虽然有测试文件但不会直接执行 → 无害。</li>
+<li><strong>xz.tukaani.org</strong>：关键！大多数 Linux 发行版不是从 Github 拉源码，而是从 <strong>xz.tukaani.org（也就是JiaTan在2024年恶意篡改导向他个人接管的gitpage）</strong> 下载。<ul>
+<li>这个子域名已经被 Jia Tan 接管。</li>
+<li>于是 <strong>真正带恶意的版本只在这个 URL 发布</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>这就像在“官方商店”和“供应链仓库”里分别放不同的货，<strong>测试者看到的干净，发行版打包用的却是投毒版。</strong></p>
+<p>大多数发行版都使用此 URL，下载时，它附带一个名为 <strong>build-to-host.m4</strong> 的文件，其中就包含恶意代码。</p>
+<p><img src="/posts/bb65c661/XZ_backdoor_analysis_09-1024x167.png" alt="Deobfuscated line of code in build-to-host.m4"></p>
+<p>它会在构建过程（<code>./configure</code> 阶段）被执行，这意味着只要有人打包&#x2F;编译，就会触发。这行代码主要用 <code>tr</code> 修复一个<strong>看似“坏掉的”测试文件：<code>bad-3-corrupt_lzma2.xz</code></strong>。把修复后的数据管道给 <code>xz -d</code> 解压，<strong>解压的数据隐藏了一个 shell 脚本</strong>，最后使用 <strong>build-to-host.m4</strong> 触发的bin&#x2F;bash执行这个shell脚本</p>
+<h5 id="2-Payload解密上线后门"><a href="#2-Payload解密上线后门" class="headerlink" title="2.Payload解密上线后门"></a>2.Payload解密上线后门</h5><p><img src="/posts/bb65c661/XZ_backdoor_analysis_10-1024x229.png" alt="Injected script contents"></p>
+<p>恶意 <code>.m4</code> 文件释放的shell脚本首先会检查：</p>
+<ul>
+<li>是否在 Linux 系统上运行；</li>
+<li>是否在正确的 build 流程中（避免在错误环境里暴露）</li>
+</ul>
+<p>下一阶段载荷载体：<strong>good-large_compressed.lzma</strong></p>
+<p>文件表面上是“正确压缩的 XZ 测试文件”。</p>
+<p>实际上在解压出来的数据里混入了大量“垃圾字节”，恶意 payload 被埋在其中。</p>
+<p> <strong>伪装点</strong>：文件名里写着“good”，压缩也确实没问题，更容易骗过人工审查。</p>
+<p><strong>因此如何通过清洗下一阶段载荷载体中的垃圾数据，上线后门，shell脚本也有一套非常规的拆分拼接手法</strong></p>
+<p><strong>head 命令流水线</strong>：</p>
+<ul>
+<li>每次要么丢掉 1024 字节，要么提取 2048 或 724 字节。</li>
+<li>循环下来，拼凑出 <strong>33,492 字节</strong>（&#x3D; 2048*16 + 724）。</li>
+</ul>
+<p><strong>tail 命令</strong>：</p>
+<ul>
+<li>在拼接结果里只保留最后 31,265 字节，丢掉其余部分。</li>
+</ul>
+<h5 id="3-解码与执行"><a href="#3-解码与执行" class="headerlink" title="3. 解码与执行"></a>3. 解码与执行</h5><ol>
+<li><code>tr</code>：做字符替换，把字节流进行一次简单位移&#x2F;还原（去混淆）。</li>
+<li><code>xz -d</code>：把转换后的数据再用 <code>xz</code> 解压，得到一段 <strong>原始 LZMA 流</strong>。</li>
+<li><code>pipe → shell</code>：最终把解压结果直接送进 <code>/bin/sh</code> 执行。</li>
+</ol>
+<h5 id="4-最终提取阶段"><a href="#4-最终提取阶段" class="headerlink" title="4. 最终提取阶段"></a>4. 最终提取阶段</h5><p>脚本先确认运行环境是否满足攻击者预设条件：</p>
+<ul>
+<li>项目构建时是否启用了 IFUNC。</li>
+<li>编译器是否为 GCC。</li>
+<li>工程里是否存在攻击脚本需要的两个测试文件。</li>
+</ul>
+<p><img src="/posts/bb65c661/XZ_backdoor_analysis_13-1024x83.png" alt="img"></p>
+<p><strong>后门二进制提取流程</strong></p>
+<p><strong>载体</strong>：依然是 <code>good-large_compressed.lzma</code>，但<strong>这次换了新的偏移位置。</strong></p>
+<p>提取过程通过一系列命令运行，每个命令的结果作为下一个命令的输入。格式化的单行代码如下所示：</p>
+<p><img src="/posts/bb65c661/XZ_backdoor_analysis_04-1024x742.png" alt="Formatted backdoor extraction one-liner"></p>
+<p><strong>操作链条</strong>：</p>
+<ol>
+<li>用 XZ 工具先解压文件。</li>
+<li><code>eval $i</code> 执行一串 <code>head</code> 调用，切割数据流，逐步拼出隐藏 payload。</li>
+<li>用自定义的 <strong>类 RC4 算法</strong> 对数据解密。</li>
+<li>得到另一个压缩文件，再次用 XZ 解压。</li>
+<li>按预定义偏移丢掉数据头的一部分字节，得到最终 payload。</li>
+<li>把结果保存为 <strong><code>liblzma_la-crc64-fast.o</code></strong>。</li>
+</ol>
+<p><strong>意义</strong>：这个 <code>.o</code> 文件就是实打实的后门对象，会在后续 <strong>链接流程</strong> 中直接嵌入 liblzma。</p>
+<p>脚本还会修改 <code>crc_x86_clmul.h</code> 文件里的函数：把 <code>__get_cpuid</code> 改成 <code>_get_cpuid</code>。<strong>避免编译&#x2F;链接时报错，确保恶意 <code>.o</code> 文件能顺利合入最终库。</strong></p>
+<p><strong>这一步是“拼图最后一块”</strong>：没有这行改动，恶意对象可能不会被编译器接受。</p>
+<h3 id="感染链条概览"><a href="#感染链条概览" class="headerlink" title="感染链条概览"></a>感染链条概览</h3><p><strong>入口</strong>：xz 5.6.0 &#x2F; 5.6.1 tarball（从被攻陷的 <code>xz.tukaani.org</code> 下载）。</p>
+<p><strong>构建阶段</strong>：</p>
+<ul>
+<li>调用恶意的 <code>m4/build-to-host.m4</code> 脚本。</li>
+<li>脚本修复并解压 <code>bad-3-corrupt_lzma.xz</code>，释放出第一段 shell 脚本。</li>
+<li>这个脚本再去解压 <code>good-large_compressed.lzma</code> 的一部分。</li>
+</ul>
+<p><strong>后续链条</strong>：</p>
+<ul>
+<li>从 <code>good-large_compressed.lzma</code> 提取加密数据。</li>
+<li>通过 AWK 实现的定制 RC4-like 算法解密。</li>
+<li>再次用 xz 解压得到二进制数据。</li>
+<li>最终落盘成 <code>liblzma_la-crc64-fast.o</code>，在编译&#x2F;链接过程中被嵌入库里。</li>
+</ul>
+<p><img src="/posts/bb65c661/XZ_backdoor_analysis_14-1024x531.png" alt="img"></p>
+<p>由于本系列主要分析的是整条感染链条中JiaTan如何隐藏恶意代码与真实目的，因此对于后门代码的分析暂且搁置，感兴趣的朋友们可以自行查阅<a target="_blank" rel="noopener" href="https://securelist.com/xz-backdoor-part-3-hooking-ssh/113007/">XZ后门分析</a>。</p>
+<p><img src="/posts/bb65c661/sl-xz-backdoor-featured-1-1200x600.jpg" alt="img"></p>
+<p>在 XZ 案例中，攻击者直接利用了 <strong>开源文化的人际信任机制</strong>，通过身份渗透、社交压迫、长期 patch 养成，把恶意逻辑塞进了光天化日之下的构建脚本。</p>
+<p>这种 <strong>高度互动的社交工程 + 技术投毒的结合</strong>，是过去大部分 APT 还没玩过的套路。</p>
+<p><img src="/posts/bb65c661/image-20250905231109234.png" alt="image-20250905231109234"></p>
+<h1 id="总结与警示"><a href="#总结与警示" class="headerlink" title="总结与警示"></a>总结与警示</h1><p>XZ backdoor 事件并不是单纯的“代码被投毒”，而是一场 <strong>供应链信任实验</strong>：攻击者在身份层面通过社交工程和长期潜伏撬开了开源社区的信任防线；在技术层面，他们把恶意逻辑嵌进构建流程和测试文件里，环环相扣，直到最终在毫无预警的情况下把后门编译进关键的系统库。</p>
+<p>对红队来说，这说明 <strong>身份与流程的操纵</strong> 已经可以和传统漏洞利用、0day 并列为攻击路径；未来高水平的 APT 行动很可能会把“人 + 代码 + 供应链”三者结合，达到比单纯技术投毒更深的隐匿。</p>
+<p>对蓝队而言，警醒点在于：</p>
+<ul>
+<li>你不能再只盯着二进制里的签名和恶意代码片段；</li>
+<li>你必须把注意力扩展到 <strong>开源生态的人力因素</strong>、<strong>构建链的完整性</strong> 和 <strong>分发渠道的真实性</strong>；</li>
+<li>单靠 fuzz、静态分析、CI 扫描都不够，因为这类攻击压根不是靠 0day，而是靠你习以为常的“流程漏洞”。</li>
+</ul>
+<p>一句话：<strong>如果信任链本身被玩坏，再强的检测也只是摆设。</strong></p>
+<p><img src="/posts/bb65c661/3ef9ba95456a7ecc9c5e9a077db83e52.png" alt="信任"></p>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.sudo.online/posts/bb65c661/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.sudo.online/posts/bb65c661/&title=身份隐藏_无痕系列(3) - Satoru's Blog&summary=以APT趋势作为导引,发掘一线作战新思路"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=身份隐藏_无痕系列(3) - Satoru's Blog&amp;body=https://blog.sudo.online/posts/bb65c661/"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.sudo.online/posts/bb65c661/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/cada0cca/">React2ShellNode后门上线</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/7297c4f4/">JS对抗与逆向_实战篇</a></div></section></div>
+
+
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body beaudar'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="beaudar" repo="sat0ru-qwq/blog-comment" issue-term="pathname" theme="preferred-color-scheme" input-position="top" comment-order="desc" loading="true" branch="main"></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">Satoru</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#APT%E6%80%81%E5%8A%BF%E4%B8%8E%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5%E7%B3%BB%E5%88%97"><span class="toc-text">APT态势与威胁情报系列</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XZ-%E5%90%8E%E9%97%A8%E4%BA%8B%E4%BB%B6"><span class="toc-text">XZ 后门事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E8%83%8C%E6%99%AF"><span class="toc-text">攻击背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%89%8B%E6%B3%95%EF%BC%88%E8%BA%AB%E4%BB%BD%E9%9A%90%E8%97%8F-%E4%BE%9B%E5%BA%94%E9%93%BE%E6%B8%97%E9%80%8F%EF%BC%89"><span class="toc-text">攻击手法（身份隐藏 + 供应链渗透）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%97%B6%E9%97%B4%E7%BA%BF"><span class="toc-text">事件时间线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%831%E2%80%94%E2%80%94%E9%95%BF%E6%9C%9F%E7%A4%BE%E5%B7%A5-%E7%A4%BE%E5%8C%BA%E6%BD%9C%E4%BC%8F"><span class="toc-text">核心1——长期社工 + 社区潜伏</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2021"><span class="toc-text">2021</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2022"><span class="toc-text">2022</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2023"><span class="toc-text">2023</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2024"><span class="toc-text">2024</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%832-%E2%80%94%E2%80%94%E6%93%8D%E4%BD%9C%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-text">核心2 ——操作构建过程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E6%8E%A7%E5%88%B6%E5%88%86%E5%8F%91%E5%85%A5%E5%8F%A3"><span class="toc-text">1. 控制分发入口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-Payload%E8%A7%A3%E5%AF%86%E4%B8%8A%E7%BA%BF%E5%90%8E%E9%97%A8"><span class="toc-text">2.Payload解密上线后门</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E8%A7%A3%E7%A0%81%E4%B8%8E%E6%89%A7%E8%A1%8C"><span class="toc-text">3. 解码与执行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E6%9C%80%E7%BB%88%E6%8F%90%E5%8F%96%E9%98%B6%E6%AE%B5"><span class="toc-text">4. 最终提取阶段</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%84%9F%E6%9F%93%E9%93%BE%E6%9D%A1%E6%A6%82%E8%A7%88"><span class="toc-text">感染链条概览</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E8%AD%A6%E7%A4%BA"><span class="toc-text">总结与警示</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #beaudar');
+  util.viewportLazyload(el, load_beaudar, false);
+
+  function load_beaudar() {
+    if (!el) return;
+    try {
+      el.innerHTML = '';
+    } catch (error) {
+      console.error(error);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://beaudar.lipk.org/client.js';
+    script.async = true;
+    for (const key of Object.keys(el.attributes)) {
+      const attr = el.attributes[key];
+      if (['class', 'id'].includes(attr.name) === false) {
+        script.setAttribute(attr.name, attr.value);
+      }
+    }
+    el.appendChild(script);
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/style.min.css" media="all">
+
+
+
+<!-- inject -->
+
+</div></body></html>
